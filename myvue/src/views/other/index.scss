@@ -1,0 +1,23 @@
+// 整体部分
+.c-content {
+  display: flex;
+  flex-direction: row;
+}
+.c-myleft {
+  width: 10rem;
+}
+.c-myright {
+  flex: 1;
+  height: 500px;
+  overflow: auto;
+}
+
+//
+.js-question {
+  font-weight: 600;
+}
+.js-answer {
+  font-weight: 500;
+  color: #ffb52f;
+  text-indent: 2rem;
+}
