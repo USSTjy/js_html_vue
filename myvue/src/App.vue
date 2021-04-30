@@ -5,7 +5,7 @@
       <router-link to="/about">About</router-link> |
       <router-link to="/slot">Slot</router-link> |
       <router-link to="/mixins">Mixins</router-link> |
-      <router-link to="/mydirectives">Mydirectives</router-link>
+      <router-link to="/mydirectives">Mydirectives</router-link> |
       <router-link to="/others">others</router-link>
     </div>
     <router-view />

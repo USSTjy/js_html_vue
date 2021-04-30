@@ -1,15 +1,23 @@
 const JSquestionList = [
   {
     question: "JS的基础类型",
-    answer: "",
+    answer:
+      "值类型(基本类型):字符串（String）、数字（Number）、布尔（Boolean）、空（Null）、未定义（Undefined）、Symbol;<br/>引用数据类型: 对象（Object）、数组（Array）、函数（Function）",
+  },
+  {
+    question: "Symbol的使用",
+    answer:
+      "Symbol 本质上是一种唯一标识符，可用作对象的唯一属性名;<br/>ymbol 数据类型的特点是唯一性，即使是用同一个变量生成的值也不相等;<br/>Symbol 数据类型的另一特点是隐藏性，for···in，object.keys() 不能访问;<br/>但是也有能够访问的方法：Object.getOwnPropertySymbols(obj),Object.getOwnPropertySymbols 方法会返回一个数组，成员是当前对象的所有用作属性名的 Symbol 值",
   },
   {
     question: "JS和别的语言的区别",
-    answer: "",
+    answer:
+      "JS是一种轻量级的编程语言;<br/>S是可以插入HTML页面的编程代码;<br/>JS插入HTML页面后，可由所有的现代浏览器执行",
   },
   {
     question: "let const var的区别？变量提升的理解",
-    answer: "",
+    answer:
+      "133333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333",
   },
   {
     question: "什么是闭包？如何产生的？闭包的作用",
