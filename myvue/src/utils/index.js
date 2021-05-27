@@ -16,16 +16,41 @@ const JSquestionList = [
   },
   {
     question: "let const var的区别？变量提升的理解",
-    answer:
-      "133333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333",
+    answer: `var是ES5提出的，let和const是ES6提出的；<br/>
+    const声明的是常量，必须赋值（一旦声明必须赋值，不能使用null占位；声明后不能再修改；如果声明的是复合类型数据，可以修改其属性）；<br/>
+    let和var声明的是变量，声明之后可以更改，声明时不赋值；<br/>
+    var允许重复声明变量，后一个变量会覆盖前一个变量。let和const在同一作用域不允许重复声明变量，会报错；<br/>
+    var声明的变量存在变量提升（将变量提升到当前作用域的顶部）。即变量可以在声明之前调用，值为undefined。
+    let和const不存在变量提升。即它们所声明的变量一定要在声明后使用，否则报ReferenceError错。<br/>
+    var不存在块级作用域。let和const存在块级作用域。
+    `,
+  },
+  {
+    question: "JS中变量的存储问题",
+    answer: `JS中的变量是保存在栈内存中的：<br/>
+    基本数据类型的值直接在栈内存中存储；值与值之间是独立存在的，修改一个变量不会影响其他变量；<br/>
+    对象（引用数据类型）是保存到堆内存中的，每创建一个新的对象，就会在堆内存中开辟一个新的空间；而变量保存的是对象的内存地址（对象的引用）,如果两个变量保存的是同一个对象引用，当一个变量修改属性是，另一个也会受到影响；<br/>
+    当清空一个变量的值时，只是断开该变量与对象的联系，另一个对象并不受影响<br/>
+    当比较两个基本数据类型的值时，就是比较值；当比较两个引用数据类型时，比较的是对象的内存地址；
+    `,
   },
   {
     question: "什么是闭包？如何产生的？闭包的作用",
-    answer: "",
+    answer: `js的特殊之处在于：函数内部可以直接读取全局变量，在函数外部无法读取函数内的局部变量。<br/>
+      闭包的含义就是从函数外部读取函数内的局部变量；在本质上，闭包就是将函数内部和函数外部连接起来的桥梁。<br/>
+      闭包的作用：一是可以读取函数内部的变量，二是让这些变量的值始终保存在内存中。<br/>`,
+  },
+  {
+    question: "JS中的词法作用域(静态作用域)和动态作用域",
+    answer: `JavaScript没有用动态作用域概念，但 this 机制却和动态作用域类似！<br/>
+    JavaScript是通过作用域链的方式进行变量查找的，而JS作用域链是词法作用域，也就做静态作用域！<br/>
+    词法作用域：在函数声明（定义）时确定的;<br/>动态作用域：在函数调用时确定的.
+    <br/>`,
   },
   {
     question: "this的指向问题，call bind apply",
-    answer: "",
+    answer:
+      "call和apply都是改变上下文中的this并立即执行这个函数，bind方法可以让对应的函数想什么时候调就什么时候调用，并且可以将参数在执行的时候添加，这是它们的区别，根据自己的实际情况来选择使用。",
   },
   {
     question: "ES6的新特性？symbol怎么用？",
@@ -33,7 +58,8 @@ const JSquestionList = [
   },
   {
     question: "箭头函数？和普通函数有什么区别",
-    answer: "",
+    answer:
+      "es6中新增了箭头函数，箭头函数与通过function声明的函数不同，它的this是使用的声明时上下文中的this.并且不可通过apply, call等改变。",
   },
 
   {
@@ -464,4 +490,17 @@ const webackQuestionList = [
     answer: "",
   },
 ];
-export { JSquestionList, HTMLquestionList, webackQuestionList };
+
+function bibaoTest() {
+  var cat = "有鱼";
+  function student() {
+    var cat = "年年";
+    function person2() {
+      console.log(cat);
+    }
+    return person2;
+  }
+  var std = student();
+  return std();
+}
+export { JSquestionList, HTMLquestionList, webackQuestionList, bibaoTest };

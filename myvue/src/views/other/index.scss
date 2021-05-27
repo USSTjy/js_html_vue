@@ -8,8 +8,9 @@
 }
 .c-myright {
   flex: 1;
-  height: 500px;
-  overflow: auto;
+  height: calc(100vh - 120px);
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 //
@@ -20,8 +21,9 @@
   font-weight: 500;
   color: #ffb52f;
   text-indent: 2rem;
-  width: 300px;
-  overflow: hidden; /*超出部分隐藏*/
-  white-space: nowrap; /*不换行*/
-  text-overflow: ellipsis; /*超出部分文字以...显示*/
+  word-break: break-all;
+  // width: 300px;
+  // overflow: hidden; /*超出部分隐藏*/
+  // white-space: nowrap; /*不换行*/
+  // text-overflow: ellipsis; /*超出部分文字以...显示*/
 }
