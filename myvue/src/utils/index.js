@@ -59,12 +59,18 @@ const JSquestionList = [
   {
     question: "箭头函数？和普通函数有什么区别",
     answer:
-      "es6中新增了箭头函数，箭头函数与通过function声明的函数不同，它的this是使用的声明时上下文中的this.并且不可通过apply, call等改变。",
+      "es6中新增了箭头函数，箭头函数与通过function声明的函数不同，它的this是使用的声明时上下文中的this.并且不可通过apply, call等改变；<br/>" +
+      "箭头函数不能作为构造函数，不能new,不然会报错;<br/>" +
+      "箭头函数不能绑定arguments;<br/>" +
+      "箭头函数，this代表上层对象，若无自定义上层，则代表window；普通函数，this代表当前对象；<br/>" +
+      "箭头函数没有原型属性，prototype是属于普通函数用于获取原型对象的。",
   },
 
   {
     question: "JS怎么判断数据类型？instanceof的原理",
-    answer: "",
+    answer:
+      "4种方法判断数据类型: typeof/toString/constructor/instanceof;<br/>" +
+      "instanceof 运算符用于检测构造函数的 prototype 属性是否出现在某个实例对象的原型链上。",
   },
 
   {
@@ -81,7 +87,8 @@ const JSquestionList = [
   },
   {
     question: "0.11+0.22===0.33？二进制浮点数对小数的处理",
-    answer: "",
+    answer:
+      "在 JavaScript 中整数和浮点数都属于Number数据类型，所有数字(包括整数)都是以 64 位浮点数形式储存。JavaScript 里的数字是采用IEEE 754标准的 64 位双精度浮点数，计算机进行计算的时候，会把数字转换为二进制，进行运算之后再转换为十进制，但是运算过程中小数部分最多支持52位，就会出现运算精度问题。",
   },
   {
     question: "异步任务JS是怎么处理的？eventloop的流程及宏任务与微任务的介绍",
