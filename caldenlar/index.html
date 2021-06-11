@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  </head>
+  <style>
+    body,
+    html {
+      margin: 0;
+      overflow: hidden;
+      --primary: #409eff;
+    }
+    .content {
+      position: relative;
+      width: 100%;
+      height: calc(100vh);
+      background: #eee;
+    }
+    .header {
+      width: 100%;
+      height: calc(100vh - 65px);
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+    .footer {
+      position: absolute;
+      bottom: 0;
+      height: 60px;
+      background-color: #fff;
+      width: 100%;
+      line-height: 60px;
+    }
+    .header-title {
+      height: 60px;
+      line-height: 60px;
+      background: var(--primary);
+      font-size: 24px;
+      font-weight: bold;
+      padding-right: 10px;
+      text-align: right;
+    }
+    .header-list {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      width: 100%;
+      background: #eee;
+    }
+    .header-list-item {
+      font-size: 14px;
+      margin-left: 20px;
+    }
+    .list-item-active {
+      font-size: 20px;
+      color: var(--primary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .list-item-active-line {
+      margin-top: 10px;
+      width: 30px;
+      height: 2px;
+      background-color: var(--primary);
+    }
+    .fc-toolbar-chunk:last-child > div {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .main {
+      padding: 10px;
+      /* border-radius: 10px 10px 0px 0px; */
+      border-radius: 10px;
+
+      background: #fff;
+    }
+    .calendar-header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .cal-header-left,
+    .cal-header-right,
+    .footer-content {
+      display: flex;
+      flex-direction: row;
+    }
+    .cal-header-left-item {
+      height: 15px;
+      line-height: 15px;
+      border-color: var(--primary);
+      border: 1px solid var(--primary);
+      padding: 5px;
+      text-align: center;
+    }
+    .cal-header-left-item:first-child {
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
+    }
+    .cal-header-left-item:last-child {
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+    .cal-header-left-item-acitve {
+      background: var(--primary);
+    }
+
+    .cal-header-right-item {
+      font-weight: bold;
+      margin-right: 5px;
+    }
+    .calendar-header {
+      padding: 10px;
+      border: 1px solid var(--primary);
+    }
+
+    .calendar-list {
+      border: 1px solid var(--primary);
+    }
+    .calendar-list-title,
+    .calendar-list-content {
+      /* display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center; */
+    }
+
+    .calendar-list-title-item,
+    .calendar-list-content-item {
+      text-align: center;
+    }
+    .calendar-list-content-item {
+      padding: 10px;
+      position: relative;
+    }
+    .calendar-active {
+      background: var(--primary);
+      border-radius: 20px;
+      position: relative;
+    }
+    .is-have-event {
+      position: relative;
+    }
+
+    .is-have-event::before {
+      content: "";
+      width: 5px;
+      height: 5px;
+      background: var(--primary);
+      border-radius: 5px;
+      position: absolute;
+      top: 10px;
+      right: 5px;
+    }
+    .calendar-active::before {
+      content: "";
+      width: 5px;
+      height: 5px;
+      background: #fff;
+      border-radius: 5px;
+      position: absolute;
+      top: 10px;
+      right: 5px;
+    }
+    .calendar-month {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      overflow-x: auto;
+    }
+    .calendar-month-item {
+      margin-left: 10px;
+    }
+
+    .cal-header-year {
+      display: flex;
+      flex-direction: row;
+      font-size: 24px;
+      color: var(--primary);
+      font-weight: bolder;
+      line-height: 50px;
+      justify-content: space-between;
+    }
+    .cal-header-year-item {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+    }
+    .cal-header-year-item div {
+      margin-left: 10px;
+    }
+    .trangle-right {
+      width: 0;
+      height: 0;
+      border: 10px solid;
+      border-color: var(--primary) transparent transparent;
+    }
+    .unactive {
+      color: #ccc;
+    }
+    .list-event {
+      background: #fff;
+      padding: 10px;
+      border-radius: 10px;
+    }
+    .list-event-date {
+      font-weight: bolder;
+    }
+    .list-event-start,
+    .list-event-end {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+    .list-event-start-date,
+    .list-event-end-date {
+      position: relative;
+      font-weight: 500;
+      /* padding-left: 20px; */
+    }
+    /* .list-event-start-date::before,
+    .list-event-end-date::before {
+      content: "";
+      width: 5px;
+      height: 5px;
+      border-radius: 5px;
+      position: absolute;
+      left: 5px;
+      top: 7px;
+    }
+    .list-event-start-date::before {
+      background: darkblue;
+    }
+    .list-event-end-date::before {
+      background: var(--primary);
+    } */
+    /* .list-event-start,
+    .list-event-end {
+      font-weight: bolder;
+    } */
+    .list-event {
+      margin: 10px;
+    }
+    .list-event-name {
+      font-weight: 600;
+      margin: 10px;
+      font-size: 20px;
+    }
+    .list-event-start-content-item,
+    .list-event-end-content-item {
+      font-weight: 600;
+      color: #ccc;
+    }
+    .list-event-start-content {
+      padding-bottom: 20px;
+    }
+    .list-start-to-end {
+      border: 1px solid var(--primary);
+      margin: 20px 0px;
+    }
+
+    .footer-content {
+      justify-content: space-around;
+    }
+    .footer-menu-active {
+      font-weight: bolder;
+      font-size: 20px;
+      color: var(--primary);
+    }
+    .footer-menu-text-btn {
+      padding: 10px;
+      background: var(--primary);
+      border-radius: 10px;
+      color: #fff;
+      border: 1px solid var(--primary);
+    }
+  </style>
+  <link href="./main.min.css" rel="stylesheet" />
+  <script src="./main.min.js"></script>
+  <body>
+    <div id="app" class="content">
+      <div class="header">
+        <div class="header-title">活动提醒设置</div>
+        <div class="header-list">
+          <div
+            class="header-list-item"
+            @click="handleChange(1)"
+            :class="index==1?'list-item-active':''"
+          >
+            <span>日程规划</span>
+            <div :class="index==1?'list-item-active-line':''"></div>
+          </div>
+          <div
+            class="header-list-item"
+            @click="handleChange(2)"
+            :class="index==2?'list-item-active':''"
+          >
+            <span>日程列表</span>
+            <div :class="index==2?'list-item-active-line':''"></div>
+          </div>
+        </div>
+        <div class="main">
+          <!-- <div id="calendar"></div> -->
+          <div class="calendar-content">
+            <div class="cal-header-year">
+              <div class="cal-header-year-item">
+                <div>{{dateYear}}</div>
+                <div class="trangle-right"></div>
+              </div>
+              <div class="cal-header-year-item">
+                <div>{{dateMonth}}</div>
+                <div class="trangle-right"></div>
+              </div>
+            </div>
+            <div class="calendar-header">
+              <div class="cal-header-left">
+                <div
+                  class="cal-header-left-item"
+                  :class="tabIndex==1?'cal-header-left-item-acitve':''"
+                  @click="handleChangeTab(1)"
+                >
+                  日历
+                </div>
+                <div
+                  class="cal-header-left-item"
+                  :class="tabIndex==2?'cal-header-left-item-acitve':''"
+                  @click="handleChangeTab(2)"
+                >
+                  列表
+                </div>
+              </div>
+              <!-- <div class="cal-header-right">
+                <div class="cal-header-right-item"><</div>
+                <div class="cal-header-right-item">{{dateTitle}}</div>
+                <div class="cal-header-right-item">></div>
+              </div> -->
+            </div>
+
+            <div class="calendar-list">
+              <!-- <div class="calendar-list-title">
+                <div
+                  class="calendar-list-title-item"
+                  v-for="(item,index) in listTitle"
+                  :key="index"
+                >
+                  <div>{{item.text}}</div>
+                </div>
+              </div>
+              <div class="calendar-list-content">
+                <div class="calendar-list-content-item">31</div>
+                <div class="calendar-list-content-item">1</div>
+                <div class="calendar-list-content-item">2</div>
+                <div class="calendar-list-content-item">3</div>
+                <div class="calendar-list-content-item">4</div>
+                <div class="calendar-list-content-item">5</div>
+                <div class="calendar-list-content-item">6</div>
+              </div>
+              <div class="calendar-list-content">
+                <div class="calendar-list-content-item">7</div>
+                <div class="calendar-list-content-item">8</div>
+                <div class="calendar-list-content-item">9</div>
+                <div class="calendar-list-content-item">10</div>
+                <div class="calendar-list-content-item">11</div>
+                <div class="calendar-list-content-item">12</div>
+                <div class="calendar-list-content-item">13</div>
+              </div>
+              <div class="calendar-list-content">
+                <div class="calendar-list-content-item">14</div>
+                <div class="calendar-list-content-item">15</div>
+                <div class="calendar-list-content-item">16</div>
+                <div class="calendar-list-content-item">17</div>
+                <div class="calendar-list-content-item">18</div>
+                <div class="calendar-list-content-item">19</div>
+                <div class="calendar-list-content-item">20</div>
+              </div>
+              <div class="calendar-list-content">
+                <div class="calendar-list-content-item">21</div>
+                <div class="calendar-list-content-item">22</div>
+                <div class="calendar-list-content-item">23</div>
+                <div class="calendar-list-content-item">24</div>
+                <div class="calendar-list-content-item">25</div>
+                <div class="calendar-list-content-item">26</div>
+                <div class="calendar-list-content-item">27</div>
+              </div>
+              <div class="calendar-list-content">
+                <div class="calendar-list-content-item">28</div>
+                <div class="calendar-list-content-item">29</div>
+                <div class="calendar-list-content-item">30</div>
+                <div class="calendar-list-content-item">31</div>
+                <div class="calendar-list-content-item">1</div>
+                <div class="calendar-list-content-item">2</div>
+                <div class="calendar-list-content-item">3</div>
+              </div> -->
+              <table width="100%" style="table-layout: fixed">
+                <tbody>
+                  <tr class="calendar-list-title">
+                    <td
+                      class="calendar-list-title-item"
+                      v-for="(item,index) in listTitle"
+                      :key="index"
+                    >
+                      <div>{{item.text}}</div>
+                    </td>
+                  </tr>
+                  <tr class="calendar-list-content">
+                    <td class="calendar-list-content-item unactive">31</td>
+                    <td class="calendar-list-content-item">1</td>
+                    <td class="calendar-list-content-item">2</td>
+                    <td class="calendar-list-content-item">3</td>
+                    <td class="calendar-list-content-item">4</td>
+                    <td class="calendar-list-content-item">5</td>
+                    <td class="calendar-list-content-item">6</td>
+                  </tr>
+                  <tr class="calendar-list-content">
+                    <td class="calendar-list-content-item">7</td>
+                    <td class="calendar-list-content-item">8</td>
+                    <td class="calendar-list-content-item">9</td>
+                    <td class="calendar-list-content-item">10</td>
+                    <td class="calendar-list-content-item">11</td>
+                    <td class="calendar-list-content-item">12</td>
+                    <td class="calendar-list-content-item">13</td>
+                  </tr>
+                  <tr class="calendar-list-content">
+                    <td class="calendar-list-content-item">14</td>
+                    <td class="calendar-list-content-item">15</td>
+                    <td class="calendar-list-content-item">16</td>
+                    <td class="calendar-list-content-item">17</td>
+                    <td class="calendar-list-content-item">18</td>
+                    <td class="calendar-list-content-item">19</td>
+                    <td class="calendar-list-content-item">20</td>
+                  </tr>
+                  <tr class="calendar-list-content">
+                    <td class="calendar-list-content-item">21</td>
+                    <td class="calendar-list-content-item">22</td>
+                    <td class="calendar-list-content-item">23</td>
+                    <td class="calendar-list-content-item">24</td>
+                    <td
+                      class="
+                        calendar-list-content-item
+                        is-have-event
+                        calendar-active
+                      "
+                    >
+                      25
+                    </td>
+                    <td class="calendar-list-content-item is-have-event">26</td>
+                    <td class="calendar-list-content-item">27</td>
+                  </tr>
+                  <tr class="calendar-list-content">
+                    <td class="calendar-list-content-item">28</td>
+                    <td class="calendar-list-content-item">29</td>
+                    <td class="calendar-list-content-item">30</td>
+                    <td class="calendar-list-content-item">31</td>
+                    <td class="calendar-list-content-item unactive">1</td>
+                    <td class="calendar-list-content-item unactive">2</td>
+                    <td class="calendar-list-content-item unactive">3</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="list-event-name">我的事件</div>
+        <div class="list-event">
+          <div class="list-event-date">{{dateText}}</div>
+          <div class="list-event-start">
+            <div class="list-event-start-date">开始：{{startInfo.date}}</div>
+            <div
+              class="list-event-start-afterdate"
+              :class="startInfo.isDelay ? 'unactive':''"
+            >
+              {{startInfo.afterDate}}
+            </div>
+          </div>
+          <div class="list-event-start-content">
+            {{startInfo.person}} ({{startInfo.reason}}) |
+            {{startInfo.eventName}}
+          </div>
+
+          <div class="list-start-to-end"></div>
+
+          <div class="list-event-end">
+            <div class="list-event-end-date">结束：{{endInfo.date}}</div>
+            <!-- <div class="list-event-end-content">
+              {{endInfo.person}} | {{endInfo.reason}}
+              <div class="list-event-end-content-item">
+                {{endInfo.eventName}}
+              </div>
+            </div> -->
+            <div
+              class="list-event-end-afterdate"
+              :class="endInfo.isDelay ? 'unactive':''"
+            >
+              {{endInfo.afterDate}}
+            </div>
+          </div>
+
+          <div class="list-event-start-content">
+            {{startInfo.person}} ({{startInfo.reason}}) |
+            {{startInfo.eventName}}
+          </div>
+        </div>
+      </div>
+      <div class="footer">
+        <div class="footer-content">
+          <div v-for="item in footerMenu" :key="item.index">
+            <div
+              class="footer-menu-text"
+              :class="menuId==item.id?'footer-menu-active':''"
+            >
+              <button class="footer-menu-text-btn">{{item.text}}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <script>
+    var app = new Vue({
+      el: "#app",
+      data: {
+        message: "Hello Vue!",
+        index: 1,
+        tabIndex: 1,
+        dateYear: "2020年",
+        dateMonth: "11月",
+        dateTitle: "2020年11月",
+        menuId: 3,
+        listTitle: [
+          {
+            text: "周一",
+          },
+          {
+            text: "周二",
+          },
+          {
+            text: "周三",
+          },
+          {
+            text: "周四",
+          },
+          {
+            text: "周五",
+          },
+          {
+            text: "周六",
+          },
+          {
+            text: "周日",
+          },
+        ],
+        dateText: "2020年06月11日",
+        startInfo: {
+          date: "09:00上午",
+          person: "高智强",
+          reason: "原因",
+          eventName: "开主题会议",
+          afterDate: "已超过40分钟",
+          isDelay: true,
+        },
+        endInfo: {
+          date: "15:00下午",
+          person: "高智强",
+          reason: "原因2",
+          eventName: "开主题会议22",
+          afterDate: "还有30分钟",
+          isDelay: false,
+        },
+        footerMenu: [
+          // {
+          //   text: "首页",
+          //   id: 1,
+          // },
+          // {
+          //   text: "日志",
+          //   id: 2,
+          // },
+          {
+            text: "计划",
+            id: 3,
+          },
+          // {
+          //   text: "资产管理",
+          //   id: 4,
+          // },
+
+          // {
+          //   text: "汇报",
+          //   id: 5,
+          // },
+        ],
+      },
+      methods: {
+        handleChange(index) {
+          this.index = index;
+        },
+        handleChangeTab(index) {
+          this.tabIndex = index;
+        },
+      },
+    });
+  </script>
+  <script>
+    // document.addEventListener("DOMContentLoaded", function () {
+    //   var calendarEl = document.getElementById("calendar");
+    //   var calendar = new FullCalendar.Calendar(calendarEl, {
+    //     // initialView: "dayGridMonth",
+    //     headerToolbar: {
+    //       left: "",
+    //       center: "",
+    //       right: "prev,title,next",
+    //     },
+
+    //     dateClick: function () {
+    //       console.log("a day has been clicked!");
+    //     },
+    //     events: [
+    //       {
+    //         title: "",
+    //         start: "2021-06-11",
+    //       },
+    //       {
+    //         title: "",
+    //         start: "2021-06-12",
+    //         end: "2021-06-13",
+    //       },
+    //       {
+    //         title: "event3",
+    //         start: "2017-11-09T12:30:00",
+    //         allDay: false, // will make the time show
+    //       },
+    //     ],
+    //   });
+    //   calendar.render();
+    // });
+  </script>
+</html>
