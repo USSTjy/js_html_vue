@@ -5,283 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   </head>
-  <style>
-    body,
-    html {
-      margin: 0;
-      overflow: hidden;
-      --primary: #409eff;
-    }
-    .content {
-      position: relative;
-      width: 100%;
-      height: calc(100vh);
-      background: #eee;
-    }
-    .header {
-      width: 100%;
-      height: calc(100vh - 65px);
-      overflow-y: auto;
-      overflow-x: hidden;
-    }
-    .footer {
-      position: absolute;
-      bottom: 0;
-      height: 60px;
-      background-color: #fff;
-      width: 100%;
-      line-height: 60px;
-    }
-    .header-title {
-      height: 60px;
-      line-height: 60px;
-      background: var(--primary);
-      font-size: 24px;
-      font-weight: bold;
-      padding-right: 10px;
-      text-align: right;
-    }
-    .header-list {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      width: 100%;
-      background: #eee;
-    }
-    .header-list-item {
-      font-size: 14px;
-      margin-left: 20px;
-    }
-    .list-item-active {
-      font-size: 20px;
-      color: var(--primary);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .list-item-active-line {
-      margin-top: 10px;
-      width: 30px;
-      height: 2px;
-      background-color: var(--primary);
-    }
-    .fc-toolbar-chunk:last-child > div {
-      display: flex;
-      flex-direction: row;
-    }
-
-    .main {
-      padding: 10px;
-      /* border-radius: 10px 10px 0px 0px; */
-      border-radius: 10px;
-
-      background: #fff;
-    }
-    .calendar-header {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .cal-header-left,
-    .cal-header-right,
-    .footer-content {
-      display: flex;
-      flex-direction: row;
-    }
-    .cal-header-left-item {
-      height: 15px;
-      line-height: 15px;
-      border-color: var(--primary);
-      border: 1px solid var(--primary);
-      padding: 5px;
-      text-align: center;
-    }
-    .cal-header-left-item:first-child {
-      border-top-left-radius: 10px;
-      border-bottom-left-radius: 10px;
-    }
-    .cal-header-left-item:last-child {
-      border-top-right-radius: 10px;
-      border-bottom-right-radius: 10px;
-    }
-    .cal-header-left-item-acitve {
-      background: var(--primary);
-    }
-
-    .cal-header-right-item {
-      font-weight: bold;
-      margin-right: 5px;
-    }
-    .calendar-header {
-      padding: 10px;
-      border: 1px solid var(--primary);
-    }
-
-    .calendar-list {
-      border: 1px solid var(--primary);
-    }
-    .calendar-list-title,
-    .calendar-list-content {
-      /* display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center; */
-    }
-
-    .calendar-list-title-item,
-    .calendar-list-content-item {
-      text-align: center;
-    }
-    .calendar-list-content-item {
-      padding: 10px;
-      position: relative;
-    }
-    .calendar-active {
-      background: var(--primary);
-      border-radius: 20px;
-      position: relative;
-    }
-    .is-have-event {
-      position: relative;
-    }
-
-    .is-have-event::before {
-      content: "";
-      width: 5px;
-      height: 5px;
-      background: var(--primary);
-      border-radius: 5px;
-      position: absolute;
-      top: 10px;
-      right: 5px;
-    }
-    .calendar-active::before {
-      content: "";
-      width: 5px;
-      height: 5px;
-      background: #fff;
-      border-radius: 5px;
-      position: absolute;
-      top: 10px;
-      right: 5px;
-    }
-    .calendar-month {
-      display: flex;
-      flex-direction: row;
-      width: 100%;
-      overflow-x: auto;
-    }
-    .calendar-month-item {
-      margin-left: 10px;
-    }
-
-    .cal-header-year {
-      display: flex;
-      flex-direction: row;
-      font-size: 24px;
-      color: var(--primary);
-      font-weight: bolder;
-      line-height: 50px;
-      justify-content: space-between;
-    }
-    .cal-header-year-item {
-      display: flex;
-      flex-direction: row;
-      align-items: flex-end;
-    }
-    .cal-header-year-item div {
-      margin-left: 10px;
-    }
-    .trangle-right {
-      width: 0;
-      height: 0;
-      border: 10px solid;
-      border-color: var(--primary) transparent transparent;
-    }
-    .unactive {
-      color: #ccc;
-    }
-    .list-event {
-      background: #fff;
-      padding: 10px;
-      border-radius: 10px;
-    }
-    .list-event-date {
-      font-weight: bolder;
-    }
-    .list-event-start,
-    .list-event-end {
-      margin-top: 10px;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-    }
-    .list-event-start-date,
-    .list-event-end-date {
-      position: relative;
-      font-weight: 500;
-      /* padding-left: 20px; */
-    }
-    /* .list-event-start-date::before,
-    .list-event-end-date::before {
-      content: "";
-      width: 5px;
-      height: 5px;
-      border-radius: 5px;
-      position: absolute;
-      left: 5px;
-      top: 7px;
-    }
-    .list-event-start-date::before {
-      background: darkblue;
-    }
-    .list-event-end-date::before {
-      background: var(--primary);
-    } */
-    /* .list-event-start,
-    .list-event-end {
-      font-weight: bolder;
-    } */
-    .list-event {
-      margin: 10px;
-    }
-    .list-event-name {
-      font-weight: 600;
-      margin: 10px;
-      font-size: 20px;
-    }
-    .list-event-start-content-item,
-    .list-event-end-content-item {
-      font-weight: 600;
-      color: #ccc;
-    }
-    .list-event-start-content {
-      padding-bottom: 20px;
-    }
-    .list-start-to-end {
-      border: 1px solid var(--primary);
-      margin: 20px 0px;
-    }
-
-    .footer-content {
-      justify-content: space-around;
-    }
-    .footer-menu-active {
-      font-weight: bolder;
-      font-size: 20px;
-      color: var(--primary);
-    }
-    .footer-menu-text-btn {
-      padding: 10px;
-      background: var(--primary);
-      border-radius: 10px;
-      color: #fff;
-      border: 1px solid var(--primary);
-    }
-  </style>
-  <link href="./main.min.css" rel="stylesheet" />
-  <script src="./main.min.js"></script>
+  <script src="./vue.js"></script>
+  <script src="./utils.js"></script>
+  <link href="./index.css" rel="stylesheet" />
   <body>
     <div id="app" class="content">
       <div class="header">
@@ -305,16 +31,39 @@
           </div>
         </div>
         <div class="main">
-          <!-- <div id="calendar"></div> -->
           <div class="calendar-content">
             <div class="cal-header-year">
               <div class="cal-header-year-item">
-                <div>{{dateYear}}</div>
-                <div class="trangle-right"></div>
+                <div>{{dateYear}}年</div>
+                <div
+                  class="trangle-right"
+                  @click="handleShowYear(!yearVisible)"
+                ></div>
+                <div class="month-select-list" v-if="yearVisible">
+                  <div
+                    v-for="item in yearList"
+                    :key="item"
+                    @click="handleChangeYearMonth(item,dateMonth)"
+                  >
+                    {{item}}年
+                  </div>
+                </div>
               </div>
               <div class="cal-header-year-item">
-                <div>{{dateMonth}}</div>
-                <div class="trangle-right"></div>
+                <div>{{dateMonth}}月</div>
+                <div
+                  class="trangle-right"
+                  @click="handleShowMonth(!monthVisible)"
+                ></div>
+                <div class="month-select-list" v-if="monthVisible">
+                  <div
+                    v-for="item in 12"
+                    :key="item"
+                    @click="handleChangeYearMonth(dateYear,(item))"
+                  >
+                    {{item}}月
+                  </div>
+                </div>
               </div>
             </div>
             <div class="calendar-header">
@@ -334,69 +83,13 @@
                   列表
                 </div>
               </div>
-              <!-- <div class="cal-header-right">
-                <div class="cal-header-right-item"><</div>
-                <div class="cal-header-right-item">{{dateTitle}}</div>
-                <div class="cal-header-right-item">></div>
-              </div> -->
             </div>
-
             <div class="calendar-list">
-              <!-- <div class="calendar-list-title">
-                <div
-                  class="calendar-list-title-item"
-                  v-for="(item,index) in listTitle"
-                  :key="index"
-                >
-                  <div>{{item.text}}</div>
-                </div>
-              </div>
-              <div class="calendar-list-content">
-                <div class="calendar-list-content-item">31</div>
-                <div class="calendar-list-content-item">1</div>
-                <div class="calendar-list-content-item">2</div>
-                <div class="calendar-list-content-item">3</div>
-                <div class="calendar-list-content-item">4</div>
-                <div class="calendar-list-content-item">5</div>
-                <div class="calendar-list-content-item">6</div>
-              </div>
-              <div class="calendar-list-content">
-                <div class="calendar-list-content-item">7</div>
-                <div class="calendar-list-content-item">8</div>
-                <div class="calendar-list-content-item">9</div>
-                <div class="calendar-list-content-item">10</div>
-                <div class="calendar-list-content-item">11</div>
-                <div class="calendar-list-content-item">12</div>
-                <div class="calendar-list-content-item">13</div>
-              </div>
-              <div class="calendar-list-content">
-                <div class="calendar-list-content-item">14</div>
-                <div class="calendar-list-content-item">15</div>
-                <div class="calendar-list-content-item">16</div>
-                <div class="calendar-list-content-item">17</div>
-                <div class="calendar-list-content-item">18</div>
-                <div class="calendar-list-content-item">19</div>
-                <div class="calendar-list-content-item">20</div>
-              </div>
-              <div class="calendar-list-content">
-                <div class="calendar-list-content-item">21</div>
-                <div class="calendar-list-content-item">22</div>
-                <div class="calendar-list-content-item">23</div>
-                <div class="calendar-list-content-item">24</div>
-                <div class="calendar-list-content-item">25</div>
-                <div class="calendar-list-content-item">26</div>
-                <div class="calendar-list-content-item">27</div>
-              </div>
-              <div class="calendar-list-content">
-                <div class="calendar-list-content-item">28</div>
-                <div class="calendar-list-content-item">29</div>
-                <div class="calendar-list-content-item">30</div>
-                <div class="calendar-list-content-item">31</div>
-                <div class="calendar-list-content-item">1</div>
-                <div class="calendar-list-content-item">2</div>
-                <div class="calendar-list-content-item">3</div>
-              </div> -->
-              <table width="100%" style="table-layout: fixed">
+              <table
+                v-if="tabIndex==1"
+                width="100%"
+                style="table-layout: fixed"
+              >
                 <tbody>
                   <tr class="calendar-list-title">
                     <td
@@ -407,133 +100,125 @@
                       <div>{{item.text}}</div>
                     </td>
                   </tr>
-                  <tr class="calendar-list-content">
-                    <!-- <td class="calendar-list-content-item">1</td> -->
-                    <td class="calendar-list-content-item">2</td>
-                    <td class="calendar-list-content-item">3</td>
-                    <td class="calendar-list-content-item">4</td>
-                    <td class="calendar-list-content-item">5</td>
-                    <td class="calendar-list-content-item">6</td>
-                    <td class="calendar-list-content-item">7</td>
-                    <td class="calendar-list-content-item">8</td>
-                  </tr>
-                  <tr class="calendar-list-content">
-                    <td class="calendar-list-content-item">9</td>
-                    <td class="calendar-list-content-item">10</td>
-                    <td class="calendar-list-content-item">11</td>
-                    <td class="calendar-list-content-item">12</td>
-                    <td class="calendar-list-content-item">13</td>
-                    <td class="calendar-list-content-item">14</td>
-                    <td class="calendar-list-content-item">15</td>
-                  </tr>
-                  <tr class="calendar-list-content">
-                    <td class="calendar-list-content-item">16</td>
-                    <td class="calendar-list-content-item">17</td>
-                    <td class="calendar-list-content-item">18</td>
-                    <td class="calendar-list-content-item">19</td>
-                    <td class="calendar-list-content-item">20</td>
-                    <td class="calendar-list-content-item">21</td>
-                    <td class="calendar-list-content-item">22</td>
-                  </tr>
-                  <tr class="calendar-list-content">
-                    <td class="calendar-list-content-item">23</td>
-                    <td class="calendar-list-content-item">24</td>
+                  <tr
+                    class="calendar-list-content"
+                    v-for="item in calendarList"
+                  >
                     <td
-                      class="
-                        calendar-list-content-item
-                        is-have-event
-                        calendar-active
-                      "
+                      v-for="tdItem in item.data"
+                      :class="selectDateIndex == tdItem.id ? tdItem.showClassName + ' calendar-active' : tdItem.showClassName "
+                      @click="handleDateChange(dateYear,dateMonth,tdItem) "
                     >
-                      25
+                      <div
+                        v-if="tdItem.isHaveEvent && selectDateIndex == tdItem.id"
+                        class="is-have-event-white"
+                      ></div>
+                      <div
+                        v-if="tdItem.isHaveEvent && !(selectDateIndex == tdItem.id)"
+                        class="is-have-event-primary"
+                      ></div>
+                      {{tdItem.showNum}}
                     </td>
-                    <td class="calendar-list-content-item is-have-event">26</td>
-                    <td class="calendar-list-content-item">27</td>
-                    <td class="calendar-list-content-item">28</td>
-                    <td class="calendar-list-content-item">29</td>
-                  </tr>
-                  <tr class="calendar-list-content">
-                    <td class="calendar-list-content-item">30</td>
-                    <td class="calendar-list-content-item unactive">1</td>
-                    <td class="calendar-list-content-item unactive">2</td>
-                    <td class="calendar-list-content-item unactive">3</td>
-                    <td class="calendar-list-content-item unactive">4</td>
-                    <td class="calendar-list-content-item unactive">5</td>
-                    <td class="calendar-list-content-item unactive">6</td>
                   </tr>
                 </tbody>
               </table>
+              <div v-if="tabIndex==2" class="event-list">
+                <!-- TODO:列表开发 -->
+                <div
+                  v-for="item in eventCalendarList"
+                  :key="item.index"
+                  @click="handleDateChange(dateYear,dateMonth,item) "
+                >
+                  <div
+                    v-if="item.isHaveEvent"
+                    class="flex-row justify-between event-list-item"
+                    :class="selectDateIndex == item.id ? 'event-list-item-active':''"
+                  >
+                    <div
+                      v-if="showEventList(dateYear,dateMonth,item).startInfo"
+                    >
+                      <div>
+                        {{showEventList(dateYear,dateMonth,item).startInfo.person}}
+                        |
+                        {{showEventList(dateYear,dateMonth,item).startInfo.eventName}}
+                      </div>
+                      <div class="event-list-item-date">
+                        {{showEventList(dateYear,dateMonth,item).startInfo.date}}
+                        --
+                        {{showEventList(dateYear,dateMonth,item).endInfo.date}}
+                      </div>
+                    </div>
+                    <div>{{dateYear}}年{{dateMonth}}月{{item.showNum}}日</div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
         <div class="list-event-name">我的事件</div>
         <div class="list-event">
-          <div class="list-event-date">{{dateText}}</div>
-          <div class="list-event-start">
-            <div class="list-event-start-date">开始：{{startInfo.date}}</div>
-            <div
-              class="list-event-start-afterdate"
-              :class="startInfo.isDelay ? 'unactive':''"
-            >
-              {{startInfo.afterDate}}
-            </div>
-          </div>
-          <div class="list-event-start-content">
-            {{startInfo.person}} ({{startInfo.reason}}) |
-            {{startInfo.eventName}}
-          </div>
-
-          <div class="list-start-to-end"></div>
-
-          <div class="list-event-end">
-            <div class="list-event-end-date">结束：{{endInfo.date}}</div>
-            <!-- <div class="list-event-end-content">
-              {{endInfo.person}} | {{endInfo.reason}}
-              <div class="list-event-end-content-item">
-                {{endInfo.eventName}}
+          <div class="list-event-date">{{eventTitleDate}}</div>
+          <div v-if="startInfo||endInfo">
+            <div class="list-event-start">
+              <div class="list-event-start-date">开始：{{startInfo.date}}</div>
+              <div
+                class="list-event-start-afterdate"
+                :class="startInfo.isDelay ? 'unactive':''"
+              >
+                {{startInfo.afterDate}}
               </div>
-            </div> -->
-            <div
-              class="list-event-end-afterdate"
-              :class="endInfo.isDelay ? 'unactive':''"
-            >
-              {{endInfo.afterDate}}
+            </div>
+            <div class="list-event-start-content">
+              {{startInfo.person}} ({{startInfo.reason}}) |
+              {{startInfo.eventName}}
+            </div>
+
+            <div class="list-start-to-end"></div>
+            <div class="list-event-end">
+              <div class="list-event-end-date">结束：{{endInfo.date}}</div>
+              <div
+                class="list-event-end-afterdate"
+                :class="endInfo.isDelay ? 'unactive':''"
+              >
+                {{endInfo.afterDate}}
+              </div>
+            </div>
+
+            <div class="list-event-start-content">
+              {{startInfo.person}} ({{startInfo.reason}}) |
+              {{startInfo.eventName}}
             </div>
           </div>
-
-          <div class="list-event-start-content">
-            {{startInfo.person}} ({{startInfo.reason}}) |
-            {{startInfo.eventName}}
+          <div v-else>
+            <div class="no-event-text">暂无数据</div>
           </div>
         </div>
       </div>
       <div class="footer">
-        <div class="footer-content">
-          <div v-for="item in footerMenu" :key="item.index">
-            <div
-              class="footer-menu-text"
-              :class="menuId==item.id?'footer-menu-active':''"
-            >
-              <button class="footer-menu-text-btn">{{item.text}}</button>
-            </div>
-          </div>
+        <div class="footer-menu-text-single width100">
+          <button class="footer-menu-text-btn width100" @click="handleGotoAdd">
+            计划
+          </button>
         </div>
       </div>
     </div>
   </body>
-  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-  <script>
+
+  <script type="module">
     var app = new Vue({
       el: "#app",
       data: {
         message: "Hello Vue!",
         index: 1,
         tabIndex: 1,
-        dateYear: "2020年",
-        dateMonth: "11月",
+        dateYear: "2020",
+        dateMonth: "11",
+        yearVisible: false,
+        monthVisible: false,
         dateTitle: "2020年11月",
         menuId: 3,
+        yearList: [],
         listTitle: [
           {
             text: "周一",
@@ -557,89 +242,228 @@
             text: "周日",
           },
         ],
-        dateText: "2020年11月25日",
-        startInfo: {
-          date: "09:00上午",
-          person: "高智强",
-          reason: "原因",
-          eventName: "开主题会议",
-          afterDate: "已超过40分钟",
-          isDelay: true,
-        },
-        endInfo: {
-          date: "15:00下午",
-          person: "高智强",
-          reason: "原因2",
-          eventName: "开主题会议22",
-          afterDate: "还有30分钟",
-          isDelay: false,
-        },
-        footerMenu: [
-          // {
-          //   text: "首页",
-          //   id: 1,
-          // },
-          // {
-          //   text: "日志",
-          //   id: 2,
-          // },
-          {
-            text: "计划",
-            id: 3,
-          },
-          // {
-          //   text: "资产管理",
-          //   id: 4,
-          // },
-
-          // {
-          //   text: "汇报",
-          //   id: 5,
-          // },
-        ],
+        eventTitleDate: "2020年11月25日",
+        // startInfo: {
+        //   date: "09:00上午",
+        //   person: "高智强",
+        //   reason: "原因",
+        //   eventName: "开主题会议",
+        //   afterDate: "已超过40分钟",
+        //   isDelay: true,
+        // },
+        // endInfo: {
+        //   date: "15:00下午",
+        //   person: "高智强",
+        //   reason: "原因2",
+        //   eventName: "开主题会议22",
+        //   afterDate: "还有30分钟",
+        //   isDelay: false,
+        // },
+        startInfo: null,
+        endInfo: null,
+        calendarList: [],
+        eventCalendarList: [],
+        selectDateIndex: "",
+      },
+      mounted() {
+        this.init();
       },
       methods: {
+        init() {
+          let date = new Date();
+          this.dateYear = date.getFullYear();
+          this.dateMonth = date.getMonth() + 1;
+          this.calendarList = this.getYearMonth(this.dateYear, this.dateMonth);
+          this.yearList = this.setYearList();
+        },
         handleChange(index) {
           this.index = index;
         },
         handleChangeTab(index) {
           this.tabIndex = index;
         },
+        is_leap(year) {
+          //判断是否为闰年
+          return year % 100 == 0
+            ? year % 400 == 0
+              ? 1
+              : 0
+            : year % 4 == 0
+            ? 1
+            : 0;
+        },
+        // 根据年月判断是月份的第一天是星期几
+        getWeek(year, month, day) {
+          var d = new Date();
+          d.setYear(year);
+          d.setMonth(month - 1);
+          d.setDate(day);
+          // console.log(d, "dfadafd", d.getDay());
+          //获得周几
+          // var weeks = ["周天", "周1", "周2", "周3", "周4", "周5", "周6"];
+          var weeks = [7, 1, 2, 3, 4, 5, 6];
+          return weeks[d.getDay()];
+        },
+        getYearMonth(year, month) {
+          //月的天数数组，days[moth] 就可以调用某一年某一月的天数
+          var days = new Array(
+            31,
+            28 + this.is_leap(year),
+            31,
+            30,
+            31,
+            30,
+            31,
+            31,
+            30,
+            31,
+            30,
+            31
+          );
+          let months = month - 1;
+          let firstWeek = this.getWeek(year, month, 1);
+          let lastWeek = this.getWeek(year, month, days[months]);
+          let currentDay = new Date().getDate();
+          let currentKey;
+          let data = [];
+          let randomNum = this.getRandomNum(5, days[months]);
+          console.log("dddddrandomNum===", randomNum);
+          if (firstWeek !== 1) {
+            for (
+              let i = days[months - 1];
+              i > days[months - 1] - firstWeek + 1;
+              i--
+            ) {
+              data.unshift({
+                showNum: i,
+                showClassName: "calendar-list-content-item unactive",
+              });
+            }
+          }
+
+          for (let i = 0; i < days[months]; i++) {
+            if (currentDay === i + 1) {
+              currentKey = data.length;
+            }
+            data.push({
+              showNum: i + 1,
+              showClassName:
+                randomNum.indexOf(i + 1) > -1
+                  ? "calendar-list-content-item is-have-event"
+                  : "calendar-list-content-item",
+              id: i + 1,
+              isHaveEvent: randomNum.indexOf(i + 1) > -1,
+            });
+          }
+          if (lastWeek !== 7) {
+            for (let i = 0; i < 7 - lastWeek; i++) {
+              data.push({
+                showNum: i + 1,
+                showClassName: "calendar-list-content-item unactive",
+              });
+            }
+          }
+          let result = [];
+          let len = Math.ceil(data.length / 7);
+          for (let i = 0; i < len; i++) {
+            result.push({
+              data: data.slice(i * 7, (i + 1) * 7),
+            });
+          }
+          // return data;
+          this.handleDateChange(year, month, data[currentKey]);
+          this.getEventList(data);
+          return result;
+        },
+        getEventList(data) {
+          let result = [];
+          data.map((item) => {
+            if (item.id) {
+              result.push(item);
+            }
+          });
+          this.eventCalendarList = result;
+        },
+        setYearList() {
+          let data = [];
+          let date = new Date();
+          for (let i = 1901; i < date.getFullYear() + 50; i++) {
+            data.push(i);
+          }
+          return data;
+        },
+        // 产生随机数据
+        getRandomNum(num, maxDay) {
+          let data = [];
+          for (let i = 0; i < num; i++) {
+            data.push(Math.ceil(Math.random() * maxDay));
+          }
+          return data;
+        },
+        handleShowYear(type) {
+          this.yearVisible = type;
+        },
+        handleShowMonth(type) {
+          this.monthVisible = type;
+        },
+        handleChangeYearMonth(year, month) {
+          this.dateYear = year;
+          this.dateMonth = month;
+          this.calendarList = this.getYearMonth(year, month);
+          this.handleShowYear(false);
+          this.handleShowMonth(false);
+          this.selectDateIndex = "";
+        },
+        handleDateChange(year, month, item) {
+          if (item.id) {
+            this.selectDateIndex = item.id;
+          } else {
+            this.selectDateIndex = "";
+          }
+          // 判断是否有活动
+          this.judgeEvent(year, month, item);
+        },
+        judgeEvent(year, month, item) {
+          if (
+            item.isHaveEvent &&
+            window.eventDateList[year + "-" + month + "-" + item.showNum]
+          ) {
+            this.startInfo =
+              window.eventDateList[
+                year + "-" + month + "-" + item.showNum
+              ].startInfo;
+            this.endInfo =
+              window.eventDateList[
+                year + "-" + month + "-" + item.showNum
+              ].endInfo;
+          } else {
+            this.startInfo = null;
+            this.endInfo = null;
+          }
+          this.eventTitleDate =
+            year + "年" + month + "月" + item.showNum + "日";
+        },
+        showEventList(year, month, item) {
+          if (window.eventDateList[year + "-" + month + "-" + item.showNum]) {
+            return {
+              startInfo:
+                window.eventDateList[year + "-" + month + "-" + item.showNum]
+                  .startInfo,
+              endInfo:
+                window.eventDateList[year + "-" + month + "-" + item.showNum]
+                  .endInfo,
+            };
+          } else {
+            return {
+              startInfo: null,
+              endInfo: null,
+            };
+          }
+        },
+        handleGotoAdd() {
+          window.location.href = "add.html";
+        },
       },
     });
-  </script>
-  <script>
-    // document.addEventListener("DOMContentLoaded", function () {
-    //   var calendarEl = document.getElementById("calendar");
-    //   var calendar = new FullCalendar.Calendar(calendarEl, {
-    //     // initialView: "dayGridMonth",
-    //     headerToolbar: {
-    //       left: "",
-    //       center: "",
-    //       right: "prev,title,next",
-    //     },
-
-    //     dateClick: function () {
-    //       console.log("a day has been clicked!");
-    //     },
-    //     events: [
-    //       {
-    //         title: "",
-    //         start: "2021-06-11",
-    //       },
-    //       {
-    //         title: "",
-    //         start: "2021-06-12",
-    //         end: "2021-06-13",
-    //       },
-    //       {
-    //         title: "event3",
-    //         start: "2017-11-09T12:30:00",
-    //         allDay: false, // will make the time show
-    //       },
-    //     ],
-    //   });
-    //   calendar.render();
-    // });
   </script>
 </html>
