@@ -5,12 +5,336 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   </head>
-  <style></style>
+  <style>
+    body,
+    html {
+      margin: 0;
+      overflow: hidden;
+      /* --primary: #409eff; */
+      --primary: rgb(250, 83, 45);
+      --white: #fff;
+    }
+    .flex-row {
+      display: flex;
+      flex-direction: row;
+    }
+    .justify-between {
+      justify-content: space-between;
+    }
+    .content {
+      position: relative;
+      width: 100%;
+      height: calc(100vh);
+      background: #eee;
+    }
+    .header {
+      width: 100%;
+      height: calc(100vh - 65px);
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+    .footer {
+      position: absolute;
+      bottom: 0;
+      height: 60px;
+      background-color: var(--white);
+      width: 100%;
+      line-height: 60px;
+    }
+    .header-title {
+      height: 60px;
+      line-height: 60px;
+      background: var(--primary);
+      font-size: 24px;
+      font-weight: bold;
+      padding-right: 10px;
+      text-align: right;
+      color: var(--white);
+    }
+    .header-list {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      width: 100%;
+      background: #eee;
+    }
+    .header-list-item {
+      font-size: 14px;
+      margin-left: 20px;
+    }
+    .list-item-active {
+      font-size: 20px;
+      color: var(--primary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .list-item-active-line {
+      margin-top: 10px;
+      width: 30px;
+      height: 2px;
+      background-color: var(--primary);
+    }
+    .fc-toolbar-chunk:last-child > div {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .main {
+      padding: 10px;
+      /* border-radius: 10px 10px 0px 0px; */
+      border-radius: 10px;
+      background: var(--white);
+    }
+    .calendar-header,
+    .cal-header-left,
+    .cal-header-right,
+    .footer-content {
+      display: flex;
+      flex-direction: row;
+    }
+    .cal-header-left-item {
+      height: 15px;
+      line-height: 15px;
+      border-color: var(--primary);
+      border: 1px solid var(--primary);
+      padding: 5px;
+      text-align: center;
+    }
+    .cal-header-left-item:first-child {
+      border-top-left-radius: 10px;
+      border-bottom-left-radius: 10px;
+    }
+    .cal-header-left-item:last-child {
+      border-top-right-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+    .cal-header-left-item-acitve {
+      background: var(--primary);
+      color: var(--white);
+    }
+
+    .cal-header-right-item {
+      font-weight: bold;
+      margin-right: 5px;
+    }
+    .calendar-header {
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      border: 1px solid var(--primary);
+      border-bottom: 0px;
+    }
+
+    .calendar-list {
+      border: 1px solid var(--primary);
+    }
+    .calendar-list-title,
+    .calendar-list-content {
+      /* display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center; */
+    }
+
+    .calendar-list-title-item,
+    .calendar-list-content-item {
+      text-align: center;
+    }
+    .calendar-list-content-item {
+      padding: 10px;
+      position: relative;
+    }
+    .calendar-active {
+      background: var(--primary);
+      /* border: 1px solid var(--primary); */
+      border-radius: 20px;
+      position: relative;
+    }
+    .is-have-event,
+    .is-have-event-active {
+      position: relative;
+    }
+    .is-have-event-primary {
+      width: 5px;
+      height: 5px;
+      background: var(--primary);
+      border-radius: 5px;
+      position: absolute;
+      top: 10px;
+      right: 5px;
+      z-index: 10;
+    }
+    .is-have-event-white {
+      width: 5px;
+      height: 5px;
+      background: var(--white);
+      border-radius: 5px;
+      position: absolute;
+      top: 10px;
+      right: 5px;
+      z-index: 10;
+    }
+    .calendar-month {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      overflow-x: auto;
+    }
+    .calendar-month-item {
+      margin-left: 10px;
+    }
+
+    .cal-header-year {
+      display: flex;
+      flex-direction: row;
+      font-size: 24px;
+      color: var(--primary);
+      font-weight: bolder;
+      line-height: 50px;
+      justify-content: space-between;
+    }
+    .cal-header-year-item {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-end;
+      position: relative;
+    }
+    .cal-header-year-item > div {
+      margin-left: 10px;
+    }
+    .trangle-right {
+      width: 0;
+      height: 0;
+      border: 10px solid;
+      border-color: var(--primary) transparent transparent;
+    }
+
+    .unactive {
+      color: #ccc;
+    }
+    .list-event {
+      background: var(--white);
+      padding: 10px;
+      border-radius: 10px;
+    }
+    .list-event-date {
+      font-weight: bolder;
+    }
+    .list-event-start,
+    .list-event-end {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+    .list-event-start-date,
+    .list-event-end-date {
+      position: relative;
+      font-weight: 500;
+      /* padding-left: 20px; */
+    }
+    /* .list-event-start-date::before,
+.list-event-end-date::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 5px;
+  position: absolute;
+  left: 5px;
+  top: 7px;
+}
+.list-event-start-date::before {
+  background: darkblue;
+}
+.list-event-end-date::before {
+  background: var(--primary);
+} */
+    /* .list-event-start,
+.list-event-end {
+  font-weight: bolder;
+} */
+    .list-event {
+      margin: 10px;
+    }
+    .list-event-name {
+      font-weight: 600;
+      margin: 10px;
+      font-size: 20px;
+    }
+    .list-event-start-content-item,
+    .list-event-end-content-item {
+      font-weight: 600;
+      color: #ccc;
+    }
+    .list-event-start-content {
+      padding-bottom: 20px;
+    }
+    .list-start-to-end {
+      border: 1px solid var(--primary);
+      margin: 20px 0px;
+    }
+    .no-event-text {
+      text-align: center;
+      padding: 20px;
+      font-size: 20px;
+      color: #ccc;
+    }
+    .footer-content {
+      justify-content: space-around;
+    }
+    .footer-menu-active {
+      font-weight: bolder;
+      font-size: 20px;
+      color: var(--primary);
+    }
+    .footer-menu-text-single {
+      padding: 0px 10px;
+      box-sizing: border-box;
+    }
+    .footer-menu-text-btn {
+      padding: 10px;
+      background: var(--primary);
+      border-radius: 10px;
+      color: var(--white);
+      border: 1px solid var(--primary);
+    }
+    .width100 {
+      width: 100%;
+    }
+
+    .month-select-list {
+      position: absolute;
+      top: 50px;
+      z-index: 20;
+      background-color: var(--white);
+      height: 200px;
+      overflow-y: auto;
+      font-size: 14px;
+      font-weight: 500;
+      border: 1px solid #ccc;
+      width: 80%;
+      text-align: center;
+    }
+
+    .event-list {
+      padding: 0px 10px;
+    }
+    .event-list-item {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    .event-list-item-date {
+      color: #ccc;
+      font-size: 12px;
+    }
+    .event-list-item-active {
+      color: var(--primary);
+    }
+  </style>
   <script src="./vue.js"></script>
   <script src="./main.min.js"></script>
   <link href="./main.min.css" rel="stylesheet" />
-  <link href="./index.css" rel="stylesheet" />
-
   <body>
     <div id="app" class="content">
       <div class="header">

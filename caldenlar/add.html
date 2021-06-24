@@ -6,6 +6,44 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
   </head>
   <body>
-    <div>ddd</div>
+    <div id="add">
+      <div @click="handleAdd">add</div>
+      <div>{{msg}}</div>
+    </div>
   </body>
+  <script src="./vue.js"></script>
+  <script>
+    var add = new Vue({
+      el: "#add",
+      data() {
+        return {
+          msg: "hahhahah",
+        };
+      },
+      methods: {
+        handleAdd() {
+          var url = "http://localhost:1337/data";
+          var xmlHttp = new XMLHttpRequest();
+          var stateChanged = () => {
+            if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+              this.msg = xmlHttp.response;
+            }
+          };
+          xmlHttp.onreadystatechange = stateChanged;
+          xmlHttp.open("GET", url, true);
+
+          // 设置期望的返回数据类型 'json' 'text' 'document' ...
+          // xmlHttp.responseType = "text/plain;charset=UTF8";
+          // 设置请求头
+          // xmlHttp.setRequestHeader("", "");
+
+          xmlHttp.send(null);
+          this.msg = xmlHttp.response;
+        },
+        stateChanged(xmlHttp) {
+          console.log("dddddxmlHttp", xmlHttp);
+        },
+      },
+    });
+  </script>
 </html>

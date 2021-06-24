@@ -37,7 +37,7 @@ html {
   height: 60px;
   line-height: 60px;
   background: var(--primary);
-  font-size: 24px;
+  font-size: 1rem;
   font-weight: bold;
   padding-right: 10px;
   text-align: right;
@@ -51,11 +51,11 @@ html {
   background: #eee;
 }
 .header-list-item {
-  font-size: 14px;
-  margin-left: 20px;
+  font-size: 0.6rem;
+  margin-left: 0.85rem;
 }
 .list-item-active {
-  font-size: 20px;
+  font-size: 0.85rem;
   color: var(--primary);
   display: flex;
   flex-direction: column;
@@ -86,8 +86,8 @@ html {
   flex-direction: row;
 }
 .cal-header-left-item {
-  height: 15px;
-  line-height: 15px;
+  /* height: 15px;
+  line-height: 15px; */
   border-color: var(--primary);
   border: 1px solid var(--primary);
   padding: 5px;
@@ -180,7 +180,7 @@ html {
 .cal-header-year {
   display: flex;
   flex-direction: row;
-  font-size: 24px;
+  font-size: 1rem;
   color: var(--primary);
   font-weight: bolder;
   line-height: 50px;
@@ -318,7 +318,7 @@ html {
 }
 .event-list-item-date {
   color: #ccc;
-  font-size: 12px;
+  font-size: 0.5rem;
 }
 .event-list-item-active {
   color: var(--primary);
