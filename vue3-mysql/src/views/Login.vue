@@ -27,7 +27,7 @@
 <script>
 import { ref, getCurrentInstance } from 'vue'
 import { loginAPI } from '../axios/apis'
-// import { ElMessage } from 'element-plus'
+import { ElMessage } from 'element-plus'
 export default {
   setup() {
     //setup()函数在beforeCreate之前调用
@@ -37,16 +37,18 @@ export default {
       userName: '',
       userPsd: '',
     })
+    console.log('ddddd', proxy)
     async function login() {
       const res = await loginAPI({
-        userName: 'jy',
-        userPsd: '123456',
+        userName: proxy.form.userName,
+        userPsd: proxy.form.userPsd,
       })
       if (res.code === 0) {
-        // ElMessage.success(res.msg)
         proxy.$router.push({
           path: '/home',
         })
+      } else {
+        ElMessage.error(res.msg)
       }
     }
     function register() {

@@ -5,9 +5,10 @@ function start(route) {
   function onRequest(req, res) {
     var pathname = url.parse(req.url).pathname;
     if (pathname !== "/favicon.ico") {
-      let data = [];
+      let data = "";
       req.on("data", (chunk) => {
-        data.push(chunk);
+        // data.push(chunk);
+        data += chunk;
       });
       req.on("end", () => {
         let result = route(pathname, req.method, data);
