@@ -1,0 +1,37 @@
+body,
+html {
+  margin: 0;
+  overflow: hidden;
+  /* --primary: #409eff; */
+  --primary: rgb(250, 83, 45);
+  --white: #fff;
+}
+/* 1.1 以16px为基准，在根元素html下，字体为62.5%
+1.2 此时1rem=10px; */
+html {
+  /* 10÷16=62.5% */
+  font-size: 62.5%;
+}
+body {
+  /* font-size: 12px; */
+  /* 12÷10=1.2 */
+  font-size: 1.2rem;
+}
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+.justify-between {
+  justify-content: space-between;
+}
+.content {
+  position: relative;
+  width: 100%;
+  height: calc(100vh);
+  background: #eee;
+}
+
+.item-title {
+  color: var(--primary);
+  font-size: 1.5rem;
+}

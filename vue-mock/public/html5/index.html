@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0"
+    />
+  </head>
+  <script src="./vue.js"></script>
+  <script src="./axios.js"></script>
+  <script src="https://cdn.bootcss.com/echarts/4.2.1-rc1/echarts.min.js"></script>
+
+  <!-- <script src="./utils.js"></script> -->
+  <link href="./index.css" rel="stylesheet" />
+  <body>
+    <div id="app" class="content">
+      <div>头部：个人信息</div>
+      <div style="text-align: center">
+        <div>数据总结</div>
+        <div id="main" style="width: 100%; height: 400px"></div>
+
+        <!-- <div style="text-align: center">
+          <canvas
+            id="myCanvas"
+            width="350"
+            height="400"
+            style="border: 1px solid #ccc"
+          ></canvas>
+        </div> -->
+      </div>
+      <div v-for="(item,index) in detailList" :key="index">
+        <div class="item-title">{{item.title}}</div>
+        <div class="item-content">{{item.content}}</div>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    var app = new Vue({
+      el: "#app",
+      data() {
+        return {
+          detailList: [
+            {
+              title: "体检报告详情1",
+              content: "dfsfafafafadfadfafa",
+            },
+            {
+              title: "体检报告详情1",
+              content: "dfsfafafafadfadfafa",
+            },
+          ],
+        };
+      },
+      mounted() {
+        this.setCanvas();
+      },
+      methods: {
+        setCanvas() {
+          // var canvas = document.getElementById("myCanvas");
+          // var context = canvas.getContext("2d");
+          // var img = new Image();
+          // img.src = "test.jpg";
+          // //图片加载完后，将其显示在canvas中
+          // img.onload = function () {
+          //   // context.drawImage(this, 0, 0);
+          //   context.drawImage(this, 0, 0, 350, 800); //改变图片大小到1080*980
+          // };
+
+          var myChart = echarts.init(document.getElementById("main"));
+
+          // 指定图表的配置项和数据
+          var option = {
+            title: {
+              text: "显示标题",
+            },
+            tooltip: {
+              show: false,
+            },
+            legend: {
+              data: [
+                // "预算分配（Allocated Budget）",
+                // "实际开销（Actual Spending）",
+              ],
+            },
+            radar: {
+              // shape: 'circle',
+              radius: "50%",
+
+              name: {
+                textStyle: {
+                  color: "#000",
+                  // backgroundColor: "#999",
+                  borderRadius: 3,
+                  padding: [3, 5],
+                },
+                // overflow: "truncate",
+                // width: 20,
+                formatter: function (value) {
+                  let list = value.split("");
+                  let result = "";
+                  for (let i = 1; i <= list.length; i++) {
+                    if (!(i % 5) && list[i] != undefined) {
+                      result += list[i - 1] + "\n";
+                    } else {
+                      result += list[i - 1];
+                    }
+                  }
+                  return result;
+                },
+              },
+              axisLine: {
+                show: true,
+                lineStyle: {
+                  color: "#ccc",
+                },
+              },
+              axisTick: {
+                show: false,
+                lineStyle: {
+                  color: "red",
+                },
+              },
+              splitLine: {
+                show: true,
+                lineStyle: {
+                  width: 1,
+                  color: "#ccc", // 图表背景网格线的颜色
+                },
+              },
+              indicator: [
+                { name: "销售能力", max: 6500 },
+                { name: "管理能力", max: 16000 },
+                { name: "信息技术能力", max: 30000 },
+                { name: "客服能力", max: 38000 },
+                { name: "研发能力", max: 52000 },
+                { name: "市场能力", max: 25000 },
+                { name: "市场2能力", max: 25000 },
+              ],
+              splitNumber: 5,
+              splitArea: {
+                show: true,
+                areaStyle: {
+                  color: ["#fff"],
+                  shadowColor: "rgba(0, 0, 0, 0.5)",
+                  shadowBlur: 2,
+                },
+              },
+            },
+            series: [
+              {
+                name: "预算 vs 开销（Budget vs spending）",
+                type: "radar",
+                areaStyle: { normal: {} },
+                data: [
+                  // {
+                  //   value: [4300, 10000, 28000, 35000, 50000, 19000],
+                  //   name: "预算分配（Allocated Budget）",
+                  // },
+                  {
+                    value: [5000, 14000, 28000, 31000, 42000, 21000, 20000],
+                    name: "实际开销（Actual Spending）",
+                  },
+                ],
+              },
+            ],
+          };
+          myChart.setOption(option);
+        },
+        getData() {
+          axios({
+            method: "post",
+            url: "http://localhost:1337/login",
+            data: {
+              userName: "Fred",
+              userPsd: "123456",
+            },
+          }).then((res) => {
+            console.log("res", res);
+          });
+        },
+      },
+    });
+  </script>
+</html>

@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Map</title>
+    <link href="./index.css" rel="stylesheet" />
+    <script src="./js/babel-polyfill.js"></script>
+    <script src="./js/es6-promise.js"></script>
+    <script src="./js/babel-standone.js"></script>
+    <script src="./js/vue.js"></script>
+    <script src="./js/echart.js"></script>
+    <script src="./js/china.js"></script>
+    <script src="./js/axios.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        position: relative;
+      }
+      .map {
+        width: 100%;
+        height: 800px;
+      }
+      .map-bar {
+        width: 100%;
+        height: 400px;
+        padding-top: 50px;
+      }
+      .content {
+        position: relative;
+        height: 100vh;
+        width: 100vw;
+        display: flex;
+        overflow-x: hidden;
+        overflow-y: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <!--    设置地图容器，需要设置宽高样式-->
+    <div id="mapContent" class="content">
+      <div style="width: 30%">
+        <div
+          style="
+            width: 100%;
+            height: 800px;
+            background-color: #080a20;
+            color: #fff;
+          "
+        >
+          <div>
+            <div id="echartMapBar" class="map-bar"></div>
+          </div>
+          <div style="width: 100%; height: 400px; color: #fff">
+            <!-- <div
+              style="
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                margin-top: 10px;
+              "
+            >
+              <div style="width: 20%; padding: 0px 5px; font-size: 14px">
+                当天事件数
+              </div>
+              <div class="width50 progress">
+                <div
+                  style="
+                    width: calc(6 / 25) + '%';
+                    height: 100%;
+                    border-radius: 10px;
+                    background-color: #f58158;
+                  "
+                ></div>
+              </div>
+              <div style="width: 20%; padding-left: 5px">16</div>
+            </div>
+            <div
+              style="
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                margin-top: 10px;
+              "
+            >
+              <div style="width: 20%; padding: 0px 5px; font-size: 14px">
+                事件报告未达标数
+              </div>
+              <div class="width50 progress">
+                <div
+                  style="
+                    width: calc(6 / 25) + '%';
+                    height: 100%;
+                    border-radius: 10px;
+                    background-color: #58b3cc;
+                  "
+                ></div>
+              </div>
+              <div style="width: 20%; padding-left: 5px">9</div>
+            </div>
+            <div
+              style="
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                margin-top: 10px;
+              "
+            >
+              <div style="width: 20%; padding: 0px 5px; font-size: 14px">
+                事件处理未达标数
+              </div>
+              <div class="width50 progress">
+                <div
+                  style="
+                    width: calc(6 / 25) + '%';
+                    height: 100%;
+                    border-radius: 10px;
+                    background-color: green;
+                  "
+                ></div>
+              </div>
+              <div style="width: 20%; padding-left: 5px">0</div>
+            </div>
+            <div
+              style="
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                margin-top: 10px;
+              "
+            >
+              <div style="width: 20%; padding: 0px 5px; font-size: 14px">
+                非监控类事件数
+              </div>
+              <div class="width50 progress">
+                <div
+                  style="
+                    width: calc(6 / 25) + '%';
+                    height: 100%;
+                    border-radius: 10px;
+                    background-color: orange;
+                  "
+                ></div>
+              </div>
+              <div style="width: 20%; padding-left: 5px">0</div>
+            </div> -->
+
+            <div
+              style="
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                margin-top: 10px;
+              "
+              v-for="item in dataList"
+              :key="item.index"
+            >
+              <div style="width: 30%; padding: 0px 5px; font-size: 14px">
+                {{item.name}}
+              </div>
+              <div class="width50 progress">
+                <div
+                  style="height: 100%; border-radius: 10px"
+                  :style="{'width':getPer(item.value),'backgroundColor':item.backgroundColor}"
+                ></div>
+              </div>
+              <div style="width: 20%; padding-left: 5px">{{item.value}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="flex: 1">
+        <div id="echartMap" class="map"></div>
+      </div>
+    </div>
+  </body>
+  <!-- <script>
+    function setMap() {
+      var myChart = echarts.init(document.getElementById("echartMap"));
+      // 数据格式 地图上标点为citys，value为经纬度，symbolSize为标记点的大小
+      // 数据格式 moveLines，fromName为线条出发城市，toName为线条到达城市，coords为数组经纬度，第一个为出发点经纬度，第二个为到达点经纬度
+      var allData = {
+        citys: [
+          {
+            name: "上海",
+            value: [121.473701, 31.230416],
+            data: {
+              total1: "10000",
+              total2: "20000",
+            },
+            symbolSize: 10,
+            itemStyle: { normal: { color: "#F58158" } },
+          },
+          {
+            name: "内蒙古",
+            value: [111.765618, 40.817498],
+            data: {
+              total1: "2323",
+              total2: "12321",
+            },
+            symbolSize: 10,
+            itemStyle: { normal: { color: "#58B3CC" } },
+          },
+          {
+            name: "四川",
+            value: [104.075931, 30.651652],
+            data: {
+              total1: "3234",
+              total2: "12323",
+            },
+            symbolSize: 10,
+            itemStyle: { normal: { color: "#58B3CC" } },
+          },
+          {
+            name: "辽宁",
+            value: [123.42944, 41.835441],
+            data: {
+              total1: "123123",
+              total2: "1232",
+            },
+            symbolSize: 10,
+            itemStyle: { normal: { color: "#58B3CC" } },
+          },
+          {
+            name: "黑龙江",
+            value: [126.661669, 45.742347],
+            data: {
+              total1: "434343",
+              total2: "4343",
+            },
+            symbolSize: 10,
+            itemStyle: { normal: { color: "#58B3CC" } },
+          },
+        ],
+        moveLines: [
+          {
+            fromName: "四川",
+            toName: "上海",
+            coords: [
+              [104.075931, 30.651652],
+              [121.473701, 31.230416],
+            ],
+            lineStyle: {
+              normal: {
+                color: "#58B3CC",
+              },
+            },
+          },
+          {
+            fromName: "内蒙古",
+            toName: "上海",
+            coords: [
+              [111.765618, 40.817498],
+              [121.473701, 31.230416],
+            ],
+            lineStyle: {
+              normal: {
+                color: "#58B3CC",
+              },
+            },
+          },
+          {
+            fromName: "辽宁",
+            toName: "上海",
+            coords: [
+              [123.42944, 41.835441],
+              [121.473701, 31.230416],
+            ],
+            lineStyle: {
+              normal: {
+                color: "#58B3CC",
+              },
+            },
+          },
+
+          {
+            fromName: "黑龙江",
+            toName: "上海",
+            coords: [
+              // [126.661669, 45.742347],
+              [128.1445, 48.5156],
+              [121.473701, 31.230416],
+            ],
+            lineStyle: {
+              normal: {
+                color: "#58B3CC",
+              },
+            },
+          },
+        ],
+      };
+
+      var option = {
+        backgroundColor: "#080a20", // 地图背景颜色
+        title: {
+          show: false,
+          text: "迁徙图", // 地图标题设置
+          subtext: "123321", // 地图小标题设置
+          sublink: "http://www.baidu.com", //小标题链接
+          target: "blank", //'self' 当前窗口打开，'blank' 新窗口打开
+          padding: 5, // 标题内边距 5  [5, 10]  [5,10,5,10]
+          left: "center", // 组件离容器左侧的距离,'left', 'center', 'right','20%'
+          top: "5%", // 组件离容器上侧的距离,'top', 'middle', 'bottom','20%'
+          right: "auto", // 组件离容器右侧的距离,'20%'
+          bottom: "auto", // 组件离容器下侧的距离,'20%'
+          textStyle: {
+            color: "#fff", //文字颜色
+            fontStyle: "normal", // italic斜体  oblique倾斜
+            fontWeight: "normal", // 文字粗细bold   bolder   lighter  100 | 200 | 300 | 400...
+            fontFamily: "sans-serif", // 字体系列
+            fontSize: 18, // 字体大小
+          },
+        },
+        // center: [110.97, 35.71],
+        aspectScale: 1,
+        legend: {
+          // 右下角图例
+          show: false, // 是否显示
+          orient: "vertical", // 图例排列方向
+          top: "bottom", // 位置
+          left: "right", // 位置
+          data: ["地点", "线路"], // 数据
+          textStyle: {
+            // 文字设置
+            color: "#fff",
+          },
+        },
+        geo: {
+          show: true, // 是否显示
+          map: "china", // 地图类型。world世界地图，china中国地图
+          // center:[115.97, 29.71], //当前视角的中心点，用经纬度表示
+          label: {
+            normal: {
+              //普通状态下的标签文本样式。(省份名称)
+              show: false, //是否在普通状态下显示标签。
+              textStyle: {
+                // 文字设置
+                color: "#fff",
+              },
+            },
+            emphasis: {
+              // 是否在高亮状态下显示标签。(省份名称)
+              show: true,
+              textStyle: {
+                // 文字设置
+                color: "#fff",
+              },
+            },
+          },
+          roam: true, // 是否开启鼠标缩放和平移漫游。默认不开启。如果只想要开启缩放或者平移，可以设置成 'scale' 或者 'move'。设置成 true 为都开启
+          itemStyle: {
+            // 地图板块区域的多边形 图形样式
+            normal: {
+              // 默认板块信息
+              areaColor: "#132937",
+              borderColor: "#fff",
+              borderWidth: 0.3,
+            },
+            emphasis: {
+              // 高亮版板块信息
+              show: true,
+              areaColor: "#f0f34b80",
+            },
+          },
+        },
+        series: [
+          {
+            name: "地点",
+            type: "effectScatter", // 特效散点图
+            coordinateSystem: "geo", // 'cartesian2d'使用二维的直角坐标系。'geo'使用地理坐标系
+            zlevel: 2, // 所有图形的 zlevel 值。
+            rippleEffect: {
+              //涟漪特效相关配置。
+              brushType: "stroke", //波纹的绘制方式，可选 'stroke' 和 'fill'。
+              period: 4, // 动画的时间。
+              scale: 2.5, // 动画中波纹的最大缩放比例。
+            },
+            label: {
+              normal: {
+                show: true, //是否显示标签。
+                position: "right", //标签的位置。// inside绝对的像素值[10, 10]
+                offset: [10, 0],
+                formatter: (params) => {
+                  let str = `${params.name}\n\n数据1：${params.data.data.total1}\n\n数据2：${params.data.data.total2}`;
+                  return str;
+                },
+                //   borderType: "solid",
+                //   borderWidth: 1,
+                //   borderColor: "#ccc",
+                backgroundColor: "transparent",
+                padding: [2, 2, 2, 2],
+              },
+              // emphasis: {
+              //   show: true,
+              //   position: "right",
+              //   formatter: "{b}",
+              // },
+            },
+            symbolSize: 2, // 标记的大小，可以设置成诸如 10 这样单一的数字，也可以用数组分开表示宽和高，例如 [20, 10] 表示标记宽为20，高为10。
+            showEffectOn: "render", // 配置何时显示特效。可选：'render' 绘制完成后显示特效。'emphasis' 高亮（hover）的时候显示特效。
+            itemStyle: {
+              // 图形样式，normal 是图形在默认状态下的样式；emphasis 是图形在高亮状态下的样式，比如在鼠标悬浮或者图例联动高亮时。
+              normal: {
+                color: "#46bee9",
+              },
+            },
+            data: allData.citys,
+          },
+          {
+            name: "线路",
+            type: "lines",
+            coordinateSystem: "geo", // 'cartesian2d'使用二维的直角坐标系。'geo'使用地理坐标系
+            zlevel: 2,
+            large: true, // 是否开启大规模散点图的优化，在数据图形特别多的时候（>=5k）可以开启。开启后配合 largeThreshold 在数据量大于指定阈值的时候对绘制进行优化。缺点：优化后不能自定义设置单个数据项的样式。
+            effect: {
+              show: true,
+              constantSpeed: 30, // 点移动的速度
+              symbol: "arrow", // 图形 'circle', 'rect', 'roundRect', 'triangle', 'diamond', 'pin', 'arrow'
+              symbolSize: 10, // 标记的大小，可以设置成诸如 10 这样单一的数字，也可以用数组分开表示宽和高，例如 [20, 10] 表示标记宽为20，高为10。
+              trailLength: 0.1, // 线的宽度
+              // symbol:
+              //   "image://data:image/gif;base64,R0lGODlhEAAQAMQAAORHHOVSKudfOulrSOp3WOyDZu6QdvCchPGolfO0o/XBs/fNwfjZ0frl3/zy7////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAABAALAAAAAAQABAAAAVVICSOZGlCQAosJ6mu7fiyZeKqNKToQGDsM8hBADgUXoGAiqhSvp5QAnQKGIgUhwFUYLCVDFCrKUE1lBavAViFIDlTImbKC5Gm2hB0SlBCBMQiB0UjIQA7",
+            },
+            label: {
+              normal: {
+                show: true, //是否显示标签。
+                position: "inside", //标签的位置。// 绝对的像素值[10, 10]
+                // offset: [30, 40], //是否对文字进行偏移。默认不偏移。例如：[30, 40] 表示文字在横向上偏移 30，纵向上偏移 40。
+                // formatter: "{b}: {c}", //标签内容格式器。模板变量有 {a}、{b}、{c}，分别表示系列名，数据名，数据值。
+              },
+            },
+            lineStyle: {
+              // 线的颜色、宽度，样式设置
+              normal: {
+                color: "orange",
+                width: 0, // 线的宽度
+                opacity: 0, // 线的透明度
+                curveness: 0.5, // 线的完全程度
+              },
+            },
+            data: allData.moveLines,
+          },
+        ],
+      };
+      myChart.setOption(option);
+      window.addEventListener("resize", () => {
+        myChart.resize();
+      });
+    }
+
+    function setMapBar() {
+      var myChart = echarts.init(document.getElementById("echartMapBar"));
+      var option = {
+        tooltip: {
+          show: false,
+          trigger: "axis",
+          axisPointer: {
+            type: "shadow", // 'shadow' as default; can also be 'line' or 'shadow'
+          },
+        },
+        legend: {
+          show: false,
+          data: ["事件"],
+        },
+        grid: {
+          left: "3%",
+          right: "2%",
+          bottom: "3%",
+          containLabel: true,
+        },
+        xAxis: {
+          type: "value",
+          axisLine: {
+            show: true,
+            lineStyle: {
+              color: "#fff",
+            },
+          },
+          axisTick: {
+            show: false,
+          },
+          splitLine: {
+            show: false,
+          },
+        },
+        yAxis: {
+          axisLine: {
+            show: true,
+            lineStyle: {
+              color: "#fff",
+            },
+          },
+          axisTick: {
+            show: false,
+          },
+          type: "category",
+          data: [
+            {
+              value: "当天事件数",
+              textStyle: {
+                color: "#fff",
+              },
+            },
+            {
+              value: "事件报告未达标数",
+              textStyle: {
+                color: "#fff",
+              },
+            },
+            {
+              value: "事件处理未达标数",
+              textStyle: {
+                color: "#fff",
+              },
+            },
+            {
+              value: "非监控类事件数",
+              textStyle: {
+                color: "#fff",
+              },
+            },
+          ],
+        },
+        series: [
+          {
+            name: "事件",
+            type: "bar",
+            stack: "total",
+            label: {
+              show: true,
+            },
+            emphasis: {
+              focus: "series",
+            },
+            barWidth: 60,
+            data: [
+              {
+                value: 16,
+                name: "当天事件数",
+                itemStyle: {
+                  color: "#F58158",
+                },
+              },
+              {
+                value: 9,
+                name: "事件报告未达标数",
+                itemStyle: {
+                  color: "#58B3CC",
+                },
+              },
+              {
+                value: 0,
+                name: "事件处理未达标数",
+                itemStyle: {
+                  color: "green",
+                },
+              },
+              {
+                value: 0,
+                name: "非监控类事件数",
+                itemStyle: {
+                  color: "orange",
+                },
+              },
+            ],
+          },
+        ],
+      };
+      myChart.setOption(option);
+      window.addEventListener("resize", () => {
+        myChart.resize();
+      });
+    }
+    setMap();
+    setMapBar();
+  </script> -->
+  <script type="text/babel">
+    var app = new Vue({
+      el: "#mapContent",
+      data: () => {
+        return {
+          dataList: [
+            {
+              name: "当天事件数",
+              value: 16,
+              backgroundColor: "#F58158",
+            },
+            {
+              name: "事件报告未达标数",
+              value: 9,
+              backgroundColor: "#58B3CC",
+            },
+            {
+              name: "事件处理未达标数",
+              value: 0,
+              backgroundColor: "green",
+            },
+            {
+              name: "非监控类事件数",
+              value: 0,
+              backgroundColor: "orange",
+            },
+          ],
+        };
+      },
+      created() {},
+      mounted() {
+        this.setMap();
+        this.setMapBar();
+      },
+      methods: {
+        getTotal() {
+          let total = 0;
+          this.dataList.map((item) => {
+            total += item.value;
+          });
+          return total;
+        },
+        getPer(value) {
+          //   console.log(
+          //     "ddddd",
+          //     this.getTotal(),
+          //     parseFloat(value / this.getTotal()) * 100 + "%"
+          //   );
+          return parseFloat(value / this.getTotal()) * 100 + "%";
+        },
+        setMap() {
+          var myChart = echarts.init(document.getElementById("echartMap"));
+          // 数据格式 地图上标点为citys，value为经纬度，symbolSize为标记点的大小
+          // 数据格式 moveLines，fromName为线条出发城市，toName为线条到达城市，coords为数组经纬度，第一个为出发点经纬度，第二个为到达点经纬度
+          var allData = {
+            citys: [
+              {
+                name: "上海",
+                value: [121.473701, 31.230416],
+                data: {
+                  total1: "10000",
+                  total2: "20000",
+                },
+                symbolSize: 10,
+                itemStyle: { normal: { color: "#F58158" } },
+              },
+              {
+                name: "内蒙古",
+                value: [111.765618, 40.817498],
+                data: {
+                  total1: "2323",
+                  total2: "12321",
+                },
+                symbolSize: 10,
+                itemStyle: { normal: { color: "#58B3CC" } },
+              },
+              {
+                name: "四川",
+                value: [104.075931, 30.651652],
+                data: {
+                  total1: "3234",
+                  total2: "12323",
+                },
+                symbolSize: 10,
+                itemStyle: { normal: { color: "#58B3CC" } },
+              },
+              {
+                name: "辽宁",
+                value: [123.42944, 41.835441],
+                data: {
+                  total1: "123123",
+                  total2: "1232",
+                },
+                symbolSize: 10,
+                itemStyle: { normal: { color: "#58B3CC" } },
+              },
+              {
+                name: "黑龙江",
+                value: [126.661669, 45.742347],
+                data: {
+                  total1: "434343",
+                  total2: "4343",
+                },
+                symbolSize: 10,
+                itemStyle: { normal: { color: "#58B3CC" } },
+              },
+            ],
+            moveLines: [
+              {
+                fromName: "四川",
+                toName: "上海",
+                coords: [
+                  [104.075931, 30.651652],
+                  [121.473701, 31.230416],
+                ],
+                lineStyle: {
+                  normal: {
+                    color: "#58B3CC",
+                  },
+                },
+              },
+              {
+                fromName: "内蒙古",
+                toName: "上海",
+                coords: [
+                  [111.765618, 40.817498],
+                  [121.473701, 31.230416],
+                ],
+                lineStyle: {
+                  normal: {
+                    color: "#58B3CC",
+                  },
+                },
+              },
+              {
+                fromName: "辽宁",
+                toName: "上海",
+                coords: [
+                  [123.42944, 41.835441],
+                  [121.473701, 31.230416],
+                ],
+                lineStyle: {
+                  normal: {
+                    color: "#58B3CC",
+                  },
+                },
+              },
+
+              {
+                fromName: "黑龙江",
+                toName: "上海",
+                coords: [
+                  // [126.661669, 45.742347],
+                  [128.1445, 48.5156],
+                  [121.473701, 31.230416],
+                ],
+                lineStyle: {
+                  normal: {
+                    color: "#58B3CC",
+                  },
+                },
+              },
+            ],
+          };
+
+          var option = {
+            backgroundColor: "#080a20", // 地图背景颜色
+            title: {
+              show: false,
+              text: "迁徙图", // 地图标题设置
+              subtext: "123321", // 地图小标题设置
+              sublink: "http://www.baidu.com", //小标题链接
+              target: "blank", //'self' 当前窗口打开，'blank' 新窗口打开
+              padding: 5, // 标题内边距 5  [5, 10]  [5,10,5,10]
+              left: "center", // 组件离容器左侧的距离,'left', 'center', 'right','20%'
+              top: "5%", // 组件离容器上侧的距离,'top', 'middle', 'bottom','20%'
+              right: "auto", // 组件离容器右侧的距离,'20%'
+              bottom: "auto", // 组件离容器下侧的距离,'20%'
+              textStyle: {
+                color: "#fff", //文字颜色
+                fontStyle: "normal", // italic斜体  oblique倾斜
+                fontWeight: "normal", // 文字粗细bold   bolder   lighter  100 | 200 | 300 | 400...
+                fontFamily: "sans-serif", // 字体系列
+                fontSize: 18, // 字体大小
+              },
+            },
+            // center: [110.97, 35.71],
+            aspectScale: 1,
+            legend: {
+              // 右下角图例
+              show: false, // 是否显示
+              orient: "vertical", // 图例排列方向
+              top: "bottom", // 位置
+              left: "right", // 位置
+              data: ["地点", "线路"], // 数据
+              textStyle: {
+                // 文字设置
+                color: "#fff",
+              },
+            },
+            geo: {
+              show: true, // 是否显示
+              map: "china", // 地图类型。world世界地图，china中国地图
+              // center:[115.97, 29.71], //当前视角的中心点，用经纬度表示
+              label: {
+                normal: {
+                  //普通状态下的标签文本样式。(省份名称)
+                  show: false, //是否在普通状态下显示标签。
+                  textStyle: {
+                    // 文字设置
+                    color: "#fff",
+                  },
+                },
+                emphasis: {
+                  // 是否在高亮状态下显示标签。(省份名称)
+                  show: true,
+                  textStyle: {
+                    // 文字设置
+                    color: "#fff",
+                  },
+                },
+              },
+              roam: true, // 是否开启鼠标缩放和平移漫游。默认不开启。如果只想要开启缩放或者平移，可以设置成 'scale' 或者 'move'。设置成 true 为都开启
+              itemStyle: {
+                // 地图板块区域的多边形 图形样式
+                normal: {
+                  // 默认板块信息
+                  areaColor: "#132937",
+                  borderColor: "#fff",
+                  borderWidth: 0.3,
+                },
+                emphasis: {
+                  // 高亮版板块信息
+                  show: true,
+                  areaColor: "#f0f34b80",
+                },
+              },
+            },
+            series: [
+              {
+                name: "地点",
+                type: "effectScatter", // 特效散点图
+                coordinateSystem: "geo", // 'cartesian2d'使用二维的直角坐标系。'geo'使用地理坐标系
+                zlevel: 2, // 所有图形的 zlevel 值。
+                rippleEffect: {
+                  //涟漪特效相关配置。
+                  brushType: "stroke", //波纹的绘制方式，可选 'stroke' 和 'fill'。
+                  period: 4, // 动画的时间。
+                  scale: 2.5, // 动画中波纹的最大缩放比例。
+                },
+                label: {
+                  normal: {
+                    show: true, //是否显示标签。
+                    position: "right", //标签的位置。// inside绝对的像素值[10, 10]
+                    offset: [10, 0],
+                    formatter: (params) => {
+                      let str = `${params.name}\n\n数据1：${params.data.data.total1}\n\n数据2：${params.data.data.total2}`;
+                      return str;
+                    },
+                    //   borderType: "solid",
+                    //   borderWidth: 1,
+                    //   borderColor: "#ccc",
+                    backgroundColor: "transparent",
+                    padding: [2, 2, 2, 2],
+                  },
+                  // emphasis: {
+                  //   show: true,
+                  //   position: "right",
+                  //   formatter: "{b}",
+                  // },
+                },
+                symbolSize: 2, // 标记的大小，可以设置成诸如 10 这样单一的数字，也可以用数组分开表示宽和高，例如 [20, 10] 表示标记宽为20，高为10。
+                showEffectOn: "render", // 配置何时显示特效。可选：'render' 绘制完成后显示特效。'emphasis' 高亮（hover）的时候显示特效。
+                itemStyle: {
+                  // 图形样式，normal 是图形在默认状态下的样式；emphasis 是图形在高亮状态下的样式，比如在鼠标悬浮或者图例联动高亮时。
+                  normal: {
+                    color: "#46bee9",
+                  },
+                },
+                data: allData.citys,
+              },
+              {
+                name: "线路",
+                type: "lines",
+                coordinateSystem: "geo", // 'cartesian2d'使用二维的直角坐标系。'geo'使用地理坐标系
+                zlevel: 2,
+                large: true, // 是否开启大规模散点图的优化，在数据图形特别多的时候（>=5k）可以开启。开启后配合 largeThreshold 在数据量大于指定阈值的时候对绘制进行优化。缺点：优化后不能自定义设置单个数据项的样式。
+                effect: {
+                  show: true,
+                  constantSpeed: 30, // 点移动的速度
+                  symbol: "arrow", // 图形 'circle', 'rect', 'roundRect', 'triangle', 'diamond', 'pin', 'arrow'
+                  symbolSize: 10, // 标记的大小，可以设置成诸如 10 这样单一的数字，也可以用数组分开表示宽和高，例如 [20, 10] 表示标记宽为20，高为10。
+                  trailLength: 0.1, // 线的宽度
+                  // symbol:
+                  //   "image://data:image/gif;base64,R0lGODlhEAAQAMQAAORHHOVSKudfOulrSOp3WOyDZu6QdvCchPGolfO0o/XBs/fNwfjZ0frl3/zy7////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAABAALAAAAAAQABAAAAVVICSOZGlCQAosJ6mu7fiyZeKqNKToQGDsM8hBADgUXoGAiqhSvp5QAnQKGIgUhwFUYLCVDFCrKUE1lBavAViFIDlTImbKC5Gm2hB0SlBCBMQiB0UjIQA7",
+                },
+                label: {
+                  normal: {
+                    show: true, //是否显示标签。
+                    position: "inside", //标签的位置。// 绝对的像素值[10, 10]
+                    // offset: [30, 40], //是否对文字进行偏移。默认不偏移。例如：[30, 40] 表示文字在横向上偏移 30，纵向上偏移 40。
+                    // formatter: "{b}: {c}", //标签内容格式器。模板变量有 {a}、{b}、{c}，分别表示系列名，数据名，数据值。
+                  },
+                },
+                lineStyle: {
+                  // 线的颜色、宽度，样式设置
+                  normal: {
+                    color: "orange",
+                    width: 0, // 线的宽度
+                    opacity: 0, // 线的透明度
+                    curveness: 0.5, // 线的完全程度
+                  },
+                },
+                data: allData.moveLines,
+              },
+            ],
+          };
+          myChart.setOption(option);
+          window.addEventListener("resize", () => {
+            myChart.resize();
+          });
+        },
+
+        setMapBar() {
+          var myChart = echarts.init(document.getElementById("echartMapBar"));
+          var option = {
+            tooltip: {
+              show: false,
+              trigger: "axis",
+              axisPointer: {
+                type: "shadow", // 'shadow' as default; can also be 'line' or 'shadow'
+              },
+            },
+            legend: {
+              show: false,
+              data: ["事件"],
+            },
+            grid: {
+              left: "3%",
+              right: "2%",
+              bottom: "3%",
+              containLabel: true,
+            },
+            xAxis: {
+              type: "value",
+              axisLine: {
+                show: true,
+                lineStyle: {
+                  color: "#fff",
+                },
+              },
+              axisTick: {
+                show: false,
+              },
+              splitLine: {
+                show: false,
+              },
+            },
+            yAxis: {
+              axisLine: {
+                show: true,
+                lineStyle: {
+                  color: "#fff",
+                },
+              },
+              axisTick: {
+                show: false,
+              },
+              type: "category",
+              data: [
+                {
+                  value: "当天事件数",
+                  textStyle: {
+                    color: "#fff",
+                  },
+                },
+                {
+                  value: "事件报告未达标数",
+                  textStyle: {
+                    color: "#fff",
+                  },
+                },
+                {
+                  value: "事件处理未达标数",
+                  textStyle: {
+                    color: "#fff",
+                  },
+                },
+                {
+                  value: "非监控类事件数",
+                  textStyle: {
+                    color: "#fff",
+                  },
+                },
+              ],
+            },
+            series: [
+              {
+                name: "事件",
+                type: "bar",
+                stack: "total",
+                label: {
+                  show: true,
+                },
+                emphasis: {
+                  focus: "series",
+                },
+                barWidth: 60,
+                data: [
+                  {
+                    value: 16,
+                    name: "当天事件数",
+                    itemStyle: {
+                      color: "#F58158",
+                    },
+                  },
+                  {
+                    value: 9,
+                    name: "事件报告未达标数",
+                    itemStyle: {
+                      color: "#58B3CC",
+                    },
+                  },
+                  {
+                    value: 0,
+                    name: "事件处理未达标数",
+                    itemStyle: {
+                      color: "green",
+                    },
+                  },
+                  {
+                    value: 0,
+                    name: "非监控类事件数",
+                    itemStyle: {
+                      color: "orange",
+                    },
+                  },
+                ],
+              },
+            ],
+          };
+          myChart.setOption(option);
+          window.addEventListener("resize", () => {
+            myChart.resize();
+          });
+        },
+      },
+    });
+  </script>
+</html>

@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0"
+    />
+    <link href="./index.css" rel="stylesheet" />
+    <script src="./js/babel-polyfill.js"></script>
+    <script src="./js/es6-promise.js"></script>
+    <script src="./js/babel-standone.js"></script>
+    <!-- <script src="https://cdn.bootcdn.net/ajax/libs/babel-polyfill/7.6.0/polyfill.min.js"></script>
+  <script src="https://cdn.bootcdn.net/ajax/libs/es6-promise/4.1.1/es6-promise.auto.min.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script> -->
+    <script src="./js/vue.js"></script>
+    <script src="./js/echart.js"></script>
+    <script src="./js/china.js"></script>
+    <script src="./js/axios.js"></script>
+  </head>
+  <body>
+    <div id="app" class="content">
+      <div>头部：个人信息{{msg}}</div>
+      <div class="text-center">
+        <div>数据总结</div>
+        <div class="flex-row">
+          <div class="width50">
+            <div id="echartRadar" class="echart-style"></div>
+          </div>
+          <div class="width50">
+            <div id="echartBar" class="echart-style"></div>
+          </div>
+        </div>
+        <div
+          id="echartMap"
+          style="width: 100%; height: 500px; margin: 0 auto"
+        ></div>
+        <div class="width50">
+          <div id="echartGraph" class="echart-style"></div>
+        </div>
+      </div>
+      <div v-for="(item,index) in detailList" :key="index">
+        <div class="item-title">{{item.title}}</div>
+        <div class="item-content">{{item.content}}</div>
+      </div>
+    </div>
+  </body>
+
+  <script type="text/babel">
+    var app = new Vue({
+      el: "#app",
+      data: () => {
+        return {
+          detailList: [
+            {
+              title: "体检报告详情1",
+              content: "dfsfafafafadfadfafa",
+            },
+            {
+              title: "体检报告详情1",
+              content: "dfsfafafafadfadfafa",
+            },
+          ],
+          msg: "",
+          colorStyle: "orange",
+        };
+      },
+      mounted() {
+        this.setRadar();
+        this.setBar();
+        // this.setMp();
+        // this.setGraph();
+        // this.getData();
+      },
+      methods: {
+        setRadar() {
+          var myChart = echarts.init(document.getElementById("echartRadar"));
+          // 指定图表的配置项和数据
+          var option = {
+            title: {
+              text: "雷达图",
+            },
+            tooltip: {
+              show: false, // 是否显示点击提示
+            },
+            legend: {
+              data: [
+                // "实际开销（Actual Spending）",
+              ],
+            },
+            radar: {
+              shape: "circle", // 修改雷达图形状 polygon/circle
+              radius: "75%", // 修改雷达图大小百分比
+              name: {
+                textStyle: {
+                  color: "#000",
+                  // backgroundColor: "#999",
+                  borderRadius: 3,
+                  padding: [3, 5],
+                },
+              },
+              axisLine: {
+                show: true,
+                lineStyle: {
+                  color: "#ccc",
+                },
+              },
+              axisTick: {
+                show: false,
+                lineStyle: {
+                  color: "red",
+                },
+              },
+              splitLine: {
+                show: true,
+                lineStyle: {
+                  width: 1,
+                  color: "#ccc", // 图表背景网格线的颜色
+                },
+              },
+              indicator: [
+                { name: "销售能力", max: 6500 },
+                { name: "管理能力", max: 16000 },
+                { name: "信息技术能力", max: 30000 },
+                { name: "客服能力", max: 38000 },
+                { name: "研发能力", max: 52000 },
+                { name: "市场能力", max: 25000 },
+                { name: "市场2能力", max: 25000 },
+              ],
+              splitNumber: 5,
+              splitArea: {
+                show: true,
+                areaStyle: {
+                  color: ["#fff"],
+                  shadowColor: "rgba(0, 0, 0, 0.5)",
+                  shadowBlur: 2,
+                },
+              },
+            },
+            series: [
+              {
+                name: "预算 vs 开销（Budget vs spending）",
+                type: "radar",
+                areaStyle: {
+                  normal: {
+                    color: this.colorStyle, // 覆盖区域背景颜色
+                  },
+                },
+                lineStyle: {
+                  normal: {
+                    color: this.colorStyle, // 边框线的颜色
+                  },
+                },
+                itemStyle: {
+                  color: this.colorStyle, // 交点颜色
+                },
+                data: [
+                  {
+                    value: [5000, 14000, 28000, 31000, 42000, 21000, 20000],
+                    name: "实际开销（Actual Spending）",
+                  },
+                ],
+              },
+            ],
+          };
+          myChart.setOption(option);
+          window.addEventListener("resize", () => {
+            myChart.resize();
+          });
+        },
+        setBar() {
+          var myChart = echarts.init(document.getElementById("echartBar"));
+          var option = {
+            title: {
+              text: "柱状图",
+            },
+            tooltip: {
+              show: false, // 是否显示点击提示
+            },
+            legend: {
+              data: [
+                // "实际开销（Actual Spending）",
+              ],
+            },
+            xAxis: {
+              type: "category",
+              data: [
+                "销售能力",
+                "管理能力",
+                "信息技术能力",
+                "客服能力",
+                "研发能力",
+                "市场能力",
+                "市场2能力",
+              ],
+            },
+            yAxis: {
+              type: "value",
+            },
+            series: [
+              {
+                data: [5000, 14000, 28000, 31000, 42000, 21000, 20000],
+                type: "bar",
+                itemStyle: {
+                  normal: {
+                    label: {
+                      show: true, //开启显示
+                      position: "top", //在上方显示
+                      textStyle: {
+                        //数值样式
+                        color: "black",
+                        fontSize: 16,
+                      },
+                    },
+                    color: this.colorStyle, // 柱状条背景颜色
+                  },
+                },
+              },
+            ],
+          };
+          myChart.setOption(option);
+          window.addEventListener("resize", () => {
+            myChart.resize();
+          });
+        },
+        setMp() {
+          var myChart = echarts.init(document.getElementById("echartMap"));
+          // 数据格式 地图上标点为citys，value为经纬度，symbolSize为标记点的大小
+          // 数据格式 moveLines，fromName为线条出发城市，toName为线条到达城市，coords为数组经纬度，第一个为出发点经纬度，第二个为到达点经纬度
+
+          var allData = {
+            citys: [
+              {
+                name: "上海",
+                value: [121.473701, 31.230416],
+                symbolSize: 10,
+                itemStyle: { normal: { color: "#F58158" } },
+              },
+              {
+                name: "内蒙古",
+                value: [111.765618, 40.817498],
+                symbolSize: 10,
+                itemStyle: { normal: { color: "#58B3CC" } },
+              },
+              {
+                name: "四川",
+                value: [104.075931, 30.651652],
+                symbolSize: 10,
+                itemStyle: { normal: { color: "#58B3CC" } },
+              },
+              {
+                name: "辽宁",
+                value: [123.42944, 41.835441],
+                symbolSize: 10,
+                itemStyle: { normal: { color: "#58B3CC" } },
+              },
+              {
+                name: "黑龙江",
+                value: [126.661669, 45.742347],
+                symbolSize: 10,
+                itemStyle: { normal: { color: "#58B3CC" } },
+              },
+            ],
+            moveLines: [
+              {
+                fromName: "四川",
+                toName: "上海",
+                coords: [
+                  [104.075931, 30.651652],
+                  [121.473701, 31.230416],
+                ],
+              },
+              {
+                fromName: "内蒙古",
+                toName: "上海",
+                coords: [
+                  [111.765618, 40.817498],
+                  [121.473701, 31.230416],
+                ],
+                lineStyle: {
+                  normal: {
+                    color: "#58B3CC",
+                  },
+                },
+              },
+              {
+                fromName: "辽宁",
+                toName: "上海",
+                coords: [
+                  [123.42944, 41.835441],
+                  [121.473701, 31.230416],
+                ],
+              },
+
+              {
+                fromName: "黑龙江",
+                toName: "上海",
+                coords: [
+                  [126.661669, 45.742347],
+                  [121.473701, 31.230416],
+                ],
+              },
+            ],
+          };
+
+          var option = {
+            backgroundColor: "#080a20", // 地图背景颜色
+            title: {
+              text: "迁徙图", // 地图标题设置
+              subtext: "123321", // 地图小标题设置
+              sublink: "http://www.baidu.com", //小标题链接
+              target: "blank", //'self' 当前窗口打开，'blank' 新窗口打开
+              padding: 5, // 标题内边距 5  [5, 10]  [5,10,5,10]
+              left: "center", // 组件离容器左侧的距离,'left', 'center', 'right','20%'
+              top: "5%", // 组件离容器上侧的距离,'top', 'middle', 'bottom','20%'
+              right: "auto", // 组件离容器右侧的距离,'20%'
+              bottom: "auto", // 组件离容器下侧的距离,'20%'
+              textStyle: {
+                color: "#fff", //文字颜色
+                fontStyle: "normal", // italic斜体  oblique倾斜
+                fontWeight: "normal", // 文字粗细bold   bolder   lighter  100 | 200 | 300 | 400...
+                fontFamily: "sans-serif", // 字体系列
+                fontSize: 18, // 字体大小
+              },
+            },
+            legend: {
+              // 右下角图例
+              show: false, // 是否显示
+              orient: "vertical", // 图例排列方向
+              top: "bottom", // 位置
+              left: "right", // 位置
+              data: ["地点", "线路"], // 数据
+              textStyle: {
+                // 文字设置
+                color: "#fff",
+              },
+            },
+            geo: {
+              show: true, // 是否显示
+              map: "china", // 地图类型。world世界地图，china中国地图
+              // center:[115.97, 29.71], //当前视角的中心点，用经纬度表示
+              label: {
+                normal: {
+                  //普通状态下的标签文本样式。(省份名称)
+                  show: false, //是否在普通状态下显示标签。
+                  textStyle: {
+                    // 文字设置
+                    color: "#fff",
+                  },
+                },
+                emphasis: {
+                  // 是否在高亮状态下显示标签。(省份名称)
+                  show: true,
+                  textStyle: {
+                    // 文字设置
+                    color: "#fff",
+                  },
+                },
+              },
+              roam: true, // 是否开启鼠标缩放和平移漫游。默认不开启。如果只想要开启缩放或者平移，可以设置成 'scale' 或者 'move'。设置成 true 为都开启
+              itemStyle: {
+                // 地图板块区域的多边形 图形样式
+                normal: {
+                  // 默认板块信息
+                  areaColor: "#132937",
+                  borderColor: "#fff",
+                  borderWidth: 0.3,
+                },
+                emphasis: {
+                  // 高亮版板块信息
+                  areaColor: "#f0f34b80",
+                },
+              },
+            },
+            series: [
+              {
+                name: "地点",
+                type: "effectScatter", // 特效散点图
+                coordinateSystem: "geo", // 'cartesian2d'使用二维的直角坐标系。'geo'使用地理坐标系
+                zlevel: 2, // 所有图形的 zlevel 值。
+                rippleEffect: {
+                  //涟漪特效相关配置。
+                  brushType: "stroke", //波纹的绘制方式，可选 'stroke' 和 'fill'。
+                  period: 4, // 动画的时间。
+                  scale: 2.5, // 动画中波纹的最大缩放比例。
+                },
+                label: {
+                  normal: {
+                    show: true, //是否显示标签。
+                    position: "inside", //标签的位置。// 绝对的像素值[10, 10]
+                    // offset: [30, 40], //是否对文字进行偏移。默认不偏移。例如：[30, 40] 表示文字在横向上偏移 30，纵向上偏移 40。
+                    offset: [20, 0], //是否对文字进行偏移。默认不偏移。例如：[30, 40] 表示文字在横向上偏移 30，纵向上偏移 40。
+                    // formatter: "{b}: {c}", //标签内容格式器。模板变量有 {a}、{b}、{c}，分别表示系列名，数据名，数据值。
+                    formatter: "{b}",
+                  },
+                  emphasis: {
+                    show: true,
+                    position: "right",
+                    formatter: "{b}",
+                  },
+                },
+                symbolSize: 2, // 标记的大小，可以设置成诸如 10 这样单一的数字，也可以用数组分开表示宽和高，例如 [20, 10] 表示标记宽为20，高为10。
+                showEffectOn: "render", // 配置何时显示特效。可选：'render' 绘制完成后显示特效。'emphasis' 高亮（hover）的时候显示特效。
+                itemStyle: {
+                  // 图形样式，normal 是图形在默认状态下的样式；emphasis 是图形在高亮状态下的样式，比如在鼠标悬浮或者图例联动高亮时。
+                  normal: {
+                    color: "#46bee9",
+                  },
+                },
+                data: allData.citys,
+              },
+              {
+                name: "线路",
+                type: "lines",
+                coordinateSystem: "geo", // 'cartesian2d'使用二维的直角坐标系。'geo'使用地理坐标系
+                zlevel: 2,
+                large: true, // 是否开启大规模散点图的优化，在数据图形特别多的时候（>=5k）可以开启。开启后配合 largeThreshold 在数据量大于指定阈值的时候对绘制进行优化。缺点：优化后不能自定义设置单个数据项的样式。
+                effect: {
+                  show: true,
+                  constantSpeed: 30, // 点移动的速度
+                  symbol: "arrow", // 图形 'circle', 'rect', 'roundRect', 'triangle', 'diamond', 'pin', 'arrow'
+                  symbolSize: 10, // 标记的大小，可以设置成诸如 10 这样单一的数字，也可以用数组分开表示宽和高，例如 [20, 10] 表示标记宽为20，高为10。
+                  trailLength: 0.1, // 线的宽度
+                  // symbol:
+                  //   "image://data:image/gif;base64,R0lGODlhEAAQAMQAAORHHOVSKudfOulrSOp3WOyDZu6QdvCchPGolfO0o/XBs/fNwfjZ0frl3/zy7////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAABAALAAAAAAQABAAAAVVICSOZGlCQAosJ6mu7fiyZeKqNKToQGDsM8hBADgUXoGAiqhSvp5QAnQKGIgUhwFUYLCVDFCrKUE1lBavAViFIDlTImbKC5Gm2hB0SlBCBMQiB0UjIQA7",
+                },
+                label: {
+                  normal: {
+                    show: true, //是否显示标签。
+                    position: "inside", //标签的位置。// 绝对的像素值[10, 10]
+                    // offset: [30, 40], //是否对文字进行偏移。默认不偏移。例如：[30, 40] 表示文字在横向上偏移 30，纵向上偏移 40。
+                    // formatter: "{b}: {c}", //标签内容格式器。模板变量有 {a}、{b}、{c}，分别表示系列名，数据名，数据值。
+                  },
+                },
+                lineStyle: {
+                  // 线的颜色、宽度，样式设置
+                  normal: {
+                    // color: new echarts.graphic.LinearGradient(
+                    //   0,
+                    //   0,
+                    //   0,
+                    //   1,
+                    //   [
+                    //     {
+                    //       offset: 0,
+                    //       color: "#58B3CC",
+                    //     },
+                    //     {
+                    //       offset: 1,
+                    //       color: "#F58158",
+                    //     },
+                    //   ],
+                    //   false
+                    // ),
+                    color: "orange",
+                    // width: 5, // 线的宽度
+                    // opacity: 0.2, // 线的透明度
+                    width: 0, // 线的宽度
+                    opacity: 0, // 线的透明度
+                    curveness: 0.5, // 线的完全程度
+                  },
+                },
+                data: allData.moveLines,
+              },
+            ],
+          };
+          myChart.setOption(option);
+          window.addEventListener("resize", () => {
+            myChart.resize();
+          });
+        },
+        setGraph() {
+          var myChart = echarts.init(document.getElementById("echartGraph"));
+          var categories = [
+            {
+              name: "类目0",
+            },
+            {
+              name: "类目1",
+            },
+          ];
+          var option = {
+            // 图的标题
+            title: {
+              text: "ECharts 关系图",
+            },
+            // 提示框的配置
+            tooltip: {
+              show: false,
+              formatter: function (x) {
+                return x.data.des;
+              },
+            },
+            // 工具箱
+            toolbox: {
+              // 显示工具箱
+              show: false,
+              feature: {
+                mark: {
+                  show: true,
+                },
+                // 还原
+                restore: {
+                  show: true,
+                },
+                // 保存为图片
+                saveAsImage: {
+                  show: true,
+                },
+              },
+            },
+            legend: [
+              {
+                // selectedMode: 'single',
+                data: categories.map(function (a) {
+                  return a.name;
+                }),
+                show: false,
+              },
+            ],
+            series: [
+              {
+                type: "graph", // 类型:关系图
+                layout: "force", //图的布局，类型为力导图
+                force: {
+                  repulsion: 2500,
+                  edgeLength: 200,
+                  //   layoutAnimation: false,
+                },
+                symbolSize: 40, // 调整节点的大小
+                roam: false, // 是否开启鼠标缩放和平移漫游。默认不开启。如果只想要开启缩放或者平移,可以设置成 'scale' 或者 'move'。设置成 true 为都开启
+                draggable: false,
+                edgeSymbol: ["circle", "arrow"],
+                edgeSymbolSize: [2, 10],
+                edgeLabel: {
+                  normal: {
+                    textStyle: {
+                      fontSize: 20,
+                    },
+                  },
+                },
+                lineStyle: {
+                  normal: {
+                    width: 2,
+                    color: "#4b565b",
+                  },
+                },
+                edgeLabel: {
+                  normal: {
+                    show: true,
+                    formatter: function (x) {
+                      return x.data.name;
+                    },
+                  },
+                },
+                label: {
+                  normal: {
+                    show: true,
+                    textStyle: {},
+                  },
+                },
+
+                // 数据
+                data: [
+                  {
+                    name: "node01",
+                    des: "nodedes01",
+                    symbol:
+                      "image://http://pic.51yuansu.com/pic3/cover/03/40/73/5b974b29533a6_610.jpg",
+                    symbolSize: [200, 240],
+                    category: 0,
+                    label: {
+                      show: false,
+                    },
+                  },
+                  {
+                    name: "node02",
+                    des: "nodedes02",
+                    symbolSize: 50,
+                    category: 1,
+                  },
+                  {
+                    name: "node03",
+                    des: "nodedes3",
+                    symbolSize: 50,
+                    category: 1,
+                  },
+                  {
+                    name: "node04",
+                    des: "nodedes04",
+                    symbolSize: 50,
+                    category: 1,
+                  },
+                  {
+                    name: "node05",
+                    des: "nodedes05",
+                    symbolSize: 50,
+                    category: 1,
+                  },
+                ],
+                links: [
+                  {
+                    source: "node01",
+                    target: "node02",
+                    name: "link01",
+                    des: "link01des",
+                  },
+                  {
+                    source: "node01",
+                    target: "node03",
+                    name: "link02",
+                    des: "link02des",
+                  },
+                  {
+                    source: "node01",
+                    target: "node04",
+                    name: "link03",
+                    des: "link03des",
+                  },
+                  {
+                    source: "node01",
+                    target: "node05",
+                    name: "link04",
+                    des: "link05des",
+                  },
+                ],
+                categories: categories,
+              },
+            ],
+          };
+          myChart.setOption(option);
+          window.addEventListener("resize", () => {
+            myChart.resize();
+          });
+        },
+
+        getData() {
+          axios({
+            //网络请求
+            method: "post",
+            url: "http://localhost:1337/login",
+            data: {
+              userName: "jy",
+              userPsd: "123456",
+            },
+          }).then((res) => {
+            console.log("res", res);
+            this.msg = res.data.msg;
+          });
+        },
+      },
+    });
+  </script>
+</html>

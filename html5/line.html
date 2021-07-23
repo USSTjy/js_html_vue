@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>ECharts 折线图</title>
+    <script src="js/echart.js"></script>
+  </head>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    .lineContent {
+      width: 100vw;
+      height: 100vh;
+    }
+    .echartLine {
+      width: 100%;
+      height: 50%;
+      margin: 0 auto;
+    }
+  </style>
+  <body>
+    <div class="lineContent">
+      <div id="echartLine" class="echartLine"></div>
+      <div id="echartLineDown" class="echartLine"></div>
+    </div>
+    <script type="text/javascript">
+      var colorList = [
+        "#5470c6",
+        "#91cc75",
+        "#ee6666",
+        "#73c0de",
+        "#3ba272",
+        "#fc8452",
+        "#9a60b4",
+        "#ea7ccc",
+        "#FCCE10",
+        "#E87C25",
+        "#27727B",
+        "#FE8463",
+        "#9BCA63",
+        "#FAD860",
+        "#F3A43B",
+        "#60C0DD",
+        "#D7504B",
+        "#C6E579",
+        "#F4E001",
+        "#F0805A",
+        "#26C0C0",
+        "#fac858",
+      ];
+      var xAxisData = [
+        "1天",
+        "2天",
+        "3天",
+        "4天",
+        "5天",
+        "6天",
+        "7天",
+        "8天",
+        "9天",
+        "10天",
+        "10天以上",
+      ];
+      var legendData = [
+        "机构1机构",
+        "机构2",
+        "机构3",
+        "机构1机构1机构1机构1机构1机构1机构1机构1机构1机构123",
+        "机构1机构1机构1机构1机构1机构1机构1机构1机构1机构1234",
+        "机构1机构1机构1机构1机构1机构1机构1机构1机构1机构1235",
+        "机构1机构1机构1机构1机构1机构1机构1机构1机构1机构12356",
+        "机构1机构1机构1机构1机构1机构1机构1机构1机构1机构12357",
+        "机构1机构1机构1机构1机构1机构1机构1机构1机构1机构12358",
+      ];
+      var seriesData = [
+        {
+          name: "机构1机构",
+          data: [150, 230, 224, 218, 135, 147, 213, 195, 197, 150, 250],
+          type: "line",
+          smooth: true,
+        },
+        {
+          name: "机构2",
+          data: [150, 250, 224, 211, 115, 187, 123, 120, 224, 213, 195, 197],
+          type: "line",
+          smooth: true,
+        },
+        {
+          name: "机构3",
+          data: [123, 120, 224, 213, 195, 197, 150, 250, 224, 211, 11],
+          type: "line",
+          smooth: true,
+        },
+        {
+          name: "机构1机构1机构1机构1机构1机构1机构1机构1机构1机构123",
+          data: [150, 230, 224, 418, 135, 147, 213, 195, 197, 150, 65],
+          type: "line",
+          smooth: true,
+        },
+        {
+          name: "机构1机构1机构1机构1机构1机构1机构1机构1机构1机构1234",
+          data: [150, 250, 224, 211, 155, 187, 123, 120, 224, 213, 78],
+          type: "line",
+          smooth: true,
+        },
+        {
+          name: "机构1机构1机构1机构1机构1机构1机构1机构1机构1机构1235",
+          data: [123, 120, 224, 213, 195, 190, 150, 250, 224, 211, 90],
+          type: "line",
+          smooth: true,
+        },
+        {
+          name: "机构1机构1机构1机构1机构1机构1机构1机构1机构1机构12356",
+          data: [150, 230, 224, 218, 135, 147, 203, 195, 197, 150, 250],
+          type: "line",
+          smooth: true,
+        },
+        {
+          name: "机构1机构1机构1机构1机构1机构1机构1机构1机构1机构12357",
+          data: [150, 250, 224, 211, 115, 187, 123, 230, 224, 213, 195],
+          type: "line",
+          smooth: true,
+        },
+        {
+          name: "机构1机构1机构1机构1机构1机构1机构1机构1机构1机构12358",
+          data: [123, 120, 224, 213, 195, 197, 150, 219, 224, 211, 115],
+          type: "line",
+          smooth: true,
+        },
+      ];
+      function setLine() {
+        var myChart = echarts.init(document.getElementById("echartLine"));
+        var option = {
+          color: colorList,
+          title: {
+            // 标题
+            show: true,
+            text: "折线图",
+            left: "2%", // 'left','center', 'right' title的位置
+            // top: "2%",
+          },
+          legend: {
+            // 图例
+            show: true,
+            data: legendData,
+            icon: "roundRect",
+            type: "scroll", // 防止图例过多，进行分页设置
+            // orient: "vertical",
+            left: "5%",
+            right: 5,
+            top: 20,
+            bottom: 20,
+          },
+          xAxis: {
+            type: "category",
+            data: xAxisData,
+          },
+          yAxis: {
+            type: "value",
+          },
+          grid: {
+            left: "3%",
+            right: "4%",
+            bottom: "3%",
+            containLabel: true,
+          },
+          tooltip: {
+            trigger: "axis",
+          },
+          series: seriesData,
+        };
+        myChart.setOption(option);
+        window.addEventListener("resize", function () {
+          myChart.resize();
+        });
+      }
+      function setLineDown() {
+        var myChart = echarts.init(document.getElementById("echartLineDown"));
+        var option = {
+          color: colorList,
+          xAxis: {
+            type: "category",
+            data: xAxisData,
+          },
+          yAxis: {
+            type: "value",
+          },
+          grid: {
+            left: "3%",
+            right: "4%",
+            bottom: "3%",
+            containLabel: true,
+          },
+          tooltip: {
+            trigger: "axis",
+          },
+          series: seriesData,
+        };
+        myChart.setOption(option);
+        window.addEventListener("resize", function () {
+          myChart.resize();
+        });
+      }
+      setLine();
+      setLineDown();
+    </script>
+  </body>
+</html>

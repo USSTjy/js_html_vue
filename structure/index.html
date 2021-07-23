@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>数据结构</title>
+  </head>
+
+  <body>
+    <script>
+      // 插入排序1
+      function paixu() {
+        const samples = [
+          //   {
+          //     src: [1, 3, 2, 6, 4, 5, 9, 8, 7],
+          //     dst: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+          //   },
+          {
+            src: [9, 8, 3, 6, 5, 4, 7, 2, 1],
+            dst: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+          },
+          //   {
+          //     src: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+          //     dst: [1, 2, 3, 4, 5, 6, 7, 8, 9],
+          //   },
+        ];
+        /**
+         * 排序算法
+         *
+         * 常用于Js中对数据进行排序，特别是在数据管理的时候
+         */
+
+        /**
+         * 冒泡排序
+         *
+         * 冒泡排序（Bubble Sort）也是一种简单直观的排序算法。它重复地走访过要排序的数列，
+         * 一次比较两个元素，如果他们的顺序错误就把他们交换过来。走访数列的工作是重复地进行
+         * 直到没有再需要交换，也就是说该数列已经排序完成。这个算法的名字由来是因为越小的
+         * 元素会经由交换慢慢"浮"到数列的顶端。
+         *
+         * 可以参考：https://www.runoob.com/w3cnote/bubble-sort.html
+         */
+        function bubbleSort(src) {
+          let arr = [...src];
+
+          let len = arr.length;
+          for (let i = 0; i <= len - 1; i++) {
+            for (let j = 0; j <= len - 1 - i; j++) {
+              if (arr[j] > arr[j + 1]) {
+                [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
+              }
+            }
+          }
+          return arr;
+        }
+
+        /**
+         * 插入排序
+         *
+         * 插入排序的代码实现虽然没有冒泡排序和选择排序那么简单粗暴，但它的原理应该是最容易
+         * 理解的了，因为只要打过扑克牌的人都应该能够秒懂。插入排序是一种最简单直观的排序算法，
+         * 它的工作原理是通过构建有序序列，对于未排序数据，在已排序序列中从后向前扫描，找到相应位置并插入。
+         *
+         * 可以参考：https://www.runoob.com/w3cnote/insertion-sort.html
+         */
+        function insertionSort(src) {
+          let arr = [...src];
+          let len = arr.length;
+          let index, cnt;
+          for (let i = 1; i < len; i++) {
+            index = i - 1;
+            cnt = arr[i];
+            while (index >= 0 && arr[index] > cnt) {
+              arr[index + 1] = arr[index];
+              index--;
+            }
+            arr[index + 1] = cnt;
+          }
+          return arr;
+        }
+        // 选择排序
+        function selectSort(src) {
+          let arr = [...src];
+          var len = arr.length;
+          var minIndex, temp;
+          for (let i = 0; i < len - 1; i++) {
+            minIndex = i;
+            for (let j = i + 1; j < len; j++) {
+              if (arr[j] < arr[minIndex]) {
+                // 指针找最小数并且保存
+                minIndex = j;
+              }
+            }
+            temp = arr[i];
+            arr[i] = arr[minIndex];
+            arr[minIndex] = temp; //交换位置
+          }
+          return arr;
+        }
+
+        samples.forEach(({ src, dst }) => {
+          // console.log("bubbleSort", bubbleSort(src), dst);
+          console.log("insertionSort", src, insertionSort(src));
+          //   console.log("selectSort", selectSort(src));
+        });
+      }
+      paixu();
+      //  链表实践2
+      function reactLink() {
+        const NodeD = {
+          value: 6,
+          next: null,
+        };
+
+        const NodeC = {
+          value: 3,
+          next: NodeD,
+        };
+
+        const NodeB = {
+          value: 2,
+          next: NodeC,
+        };
+
+        const NodeA = {
+          value: 1,
+          next: NodeB,
+        };
+
+        const LinkedList = {
+          head: NodeA,
+        };
+
+        function traversal(linkedList, callback) {
+          var current = linkedList;
+          function link() {
+            if (current.head) {
+              current = current.head;
+              link(current);
+              callback(current.value);
+            } else {
+              while (current.next !== null) {
+                callback(current.value);
+                current = current.next;
+                link(current);
+              }
+            }
+          }
+          link();
+        }
+        let sum = 0;
+        let data = traversal(LinkedList, (current) => (sum += current));
+        console.log("ssss", sum);
+      }
+      reactLink();
+      //   树、图
+      function tree() {
+        const c = {
+          value: -4,
+        };
+        const b = {
+          value: 0,
+        };
+        const a = {
+          value: 2,
+        };
+        const head = {
+          value: 3,
+        };
+        head.dep = a;
+        a.dep = b;
+        b.dep = c;
+        c.dep = a;
+        /**
+         * 树 & 图
+         *
+         * 在前端世界中，DOM、Virtual DOM都是棵树， 文件依赖管理是个图。
+         * 掌握了树和图的算法，能够帮助更好地理解前端框架。
+         */
+
+        /**
+         * Floyd判圈算法
+         *
+         * Floyd判圈算法(Floyd Cycle Detection Algorithm)，又称龟兔赛跑算法
+         * (Tortoise and Hare Algorithm)，是一个可以在有限状态机、迭代函数或者
+         * 链表上判断是否存在环，求出该环的起点与长度的算法。
+         *
+         * 在图和树的数据结构在具体使用中，可能会出现循环依赖的情况，如何自动判断
+         * 是否存在循环，可以使用Floyd判圈算法
+         *
+         * 参考： https://leetcode-cn.com/problems/linked-list-cycle/
+         */
+        const floyd = (head) => {
+          let pos = 0;
+          if (!head) {
+            pos = -1;
+            return pos;
+          }
+          let first = head;
+          let fast = head.dep;
+          let slow = head;
+          let arr = [];
+          function get() {
+            while (fast != null && fast.dep != null) {
+              if (arr.indexOf(slow.value) === -1) {
+                arr.push(slow.value);
+              }
+              console.log("arrr", arr);
+              if (fast == slow) {
+                return true;
+              }
+              fast = fast.dep.dep;
+              slow = slow.dep;
+            }
+          }
+          get();
+          console.log("valdddd", fast);
+        };
+        floyd(head);
+      }
+      tree();
+
+      //   eventLoop
+      function eventLoop() {
+        //   1 3 7 9 0 2  8 a 4 5 6
+        async function async1() {
+          console.log("1");
+          console.log(await async2());
+          console.log("2");
+        }
+        async function async2() {
+          console.log("3");
+          return "0";
+        }
+        setTimeout(function () {
+          console.log("4");
+          new Promise(function (resolve) {
+            console.log("5");
+            resolve();
+          }).then(function () {
+            console.log("6");
+          });
+        });
+        async1();
+        new Promise(function (resolve) {
+          console.log("7");
+          resolve();
+        }).then(function () {
+          console.log("8");
+        });
+        Promise.resolve("a")
+          .then("b")
+          .then(Promise.resolve("c"))
+          .then(console.log);
+        console.log("9");
+      }
+      //   eventLoop();
+
+      function Promise2() {
+        Promise.resolve({
+          then: function (fullfill) {
+            fullfill("a");
+            console.log("b");
+            throw new Error("c");
+            console.log("d");
+          },
+        }).then(
+          (d) => {
+            console.log("ddddssss", d);
+          },
+          (err) => {
+            console.log("err", err.message);
+          }
+        );
+      }
+
+      function Promise3() {
+        Promise.resolve(3)
+          .then(() => {
+            console.log("a");
+            throw new Error("b");
+          })
+          .then(
+            () => {
+              console.log("c");
+            },
+            (err) => {
+              console.log("dsds", err.message);
+              return "d";
+            }
+          )
+          .then(
+            (d) => console.log("dddddddddddddddddddddddddddd", d),
+            (e) => {
+              console.log("e");
+            }
+          );
+      }
+      //   Promise3();
+      /**
+       * @param {number[]} nums
+       * @param {number} target
+       * @return {number[]}
+       */
+      var twoSum = function (nums, target) {
+        let arr = [...nums];
+        console.log("dddd", arr);
+        let len = arr.length;
+        let index, index2;
+        for (let i = 0; i < len; i++) {
+          let temp = arr[i];
+          for (let j = i + 1; j < len; j++) {
+            if (temp + arr[j] === target) {
+              index = i;
+              index2 = j;
+              return [index, index2];
+            }
+          }
+        }
+      };
+      var nums = [2, 7, 11, 15];
+      //   console.log("two======", twoSum(nums, 9));
+      /**
+       * @param {number} x
+       * @return {number}
+       */
+      var reverse = function (x) {
+        if (!x) return false;
+        if (parseFloat(x).toString() === "NaN") return false;
+
+        let num = x.toString();
+        let data = x.toString().split("");
+        if (data.indexOf("-") > -1) {
+          data.shift();
+        }
+        let len = data.length;
+        for (let i = 0; i < parseInt(len / 2); i++) {
+          [data[i], data[len - i - 1]] = [data[len - i - 1], data[i]];
+        }
+        let res = "";
+        for (let i = 0; i < len; i++) {
+          res = res + data[i];
+        }
+        if (num.indexOf("-") > -1) {
+          res = "-" + res;
+        }
+        if (parseFloat(res) > Math.pow(2, 31) - 1) return 0;
+        if (parseFloat(res) < -(Math.pow(2, 31) - 1)) return 0;
+        return parseFloat(res);
+      };
+
+      var plusOne = function (digits) {
+        if (digits.length > 100) return false;
+        let res = [];
+        let len = digits.length;
+        for (let i = 0; i < len; i++) {
+          if (digits[i] > 9 || digits[i] < 0) {
+            return false;
+          }
+        }
+        for (let i = 0; i < len; i++) {
+          if (i === len - 1) {
+            digits[i] = digits[i] + 1;
+          }
+          res.push(digits[i]);
+        }
+
+        for (let i = len - 1; i < len; i--) {}
+        let i = len - 1;
+        while (digits[i] + 1 > 10 && i > 0) {
+          digits[i] = digits[i] - 10;
+          digits[i - 1] = digits[i - 1] + 1;
+          i--;
+        }
+        return res;
+      };
+      console.log("plusOne", plusOne([9, 9, 9]));
+    </script>
+  </body>
+</html>
