@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta
+			name="viewport"
+			content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0"
+		/>
+	</head>
+	<style>
+		html,
+		body {
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+		}
+		.content {
+			position: relative;
+			height: 100vh;
+			width: 100vw;
+			margin: 0;
+			padding: 10px;
+			box-sizing: border-box;
+			overflow-y: auto;
+		}
+		#modelDiv {
+			height: 100%;
+			width: 100%;
+			position: absolute;
+			top: 0;
+			left: 0;
+			background: #fff;
+			opacity: 0.5;
+			z-index: 99;
+			display: none;
+		}
+		#model {
+			width: 300px;
+			height: 200px;
+			background: #959fa9;
+			border-radius: 10px;
+			padding: 15px;
+			position: absolute;
+			top: 200px;
+			left: 42%;
+			z-index: 99;
+			display: none;
+		}
+		.main_style {
+			display: flex;
+			flex-direction: row;
+		}
+		.left_style {
+			flex: 1;
+		}
+		.right_style {
+			margin-left: 10px;
+			width: 200px;
+			padding-top: 10px;
+		}
+		.width100 {
+			width: 100%;
+		}
+		.textarea_style {
+			width: calc(100vw - 240px);
+		}
+		.discuss_style {
+			border: 2px solid green;
+			margin: 10px 0px;
+		}
+		.list_style {
+			display: flex;
+			flex-direction: row;
+			border-bottom: 2px solid green;
+			background-color: greenyellow;
+		}
+		.list_content_style {
+			padding: 5px;
+		}
+
+		.right_content {
+			border: 2px solid green;
+			height: 100%;
+		}
+
+		.title_head {
+			border-bottom: 2px solid green;
+			background-color: greenyellow;
+			text-align: center;
+		}
+		.title_head_middle {
+			border-top: 2px solid green;
+		}
+		.title_head_last {
+			border-bottom: 2px solid green;
+			border-top: 2px solid green;
+			background-color: greenyellow;
+			text-align: center;
+		}
+		.title_content {
+			padding: 5px;
+		}
+		.long_content_style {
+			margin: 2px 0px;
+		}
+		.content_font {
+			font-size: 12px;
+		}
+		.color_yellow {
+			color: #e8e818;
+			font-size: 16px;
+		}
+		.star_num {
+			padding-left: 10px;
+		}
+	</style>
+	<body>
+		<div id="app" class="content">
+			<div class="main_style">
+				<div class="left_style">
+					<!-- 显示评论 -->
+					<div class="width100">
+						<div id="discussList"></div>
+					</div>
+					<!-- 输入评论 -->
+					<div class="width100">
+						<!-- action=""
+					method="post"
+					-->
+						<form
+							name="myform"
+							id="myform"
+							method="post"
+							onsubmit="return vilidate()"
+						>
+							<textarea
+								name="message"
+								cols="28"
+								rows="5"
+								class="textarea_style"
+								id="message"
+							></textarea>
+							<!-- 您还可以输入:<input
+						name="remLen"
+						type="text"
+						value="10"
+						size="5"
+						readonly="readonly"
+					/>个字符 -->
+							<input type="submit" />
+							<input type="reset" />
+						</form>
+					</div>
+				</div>
+				<div class="right_style">
+					<div class="right_content">
+						<!-- 右边内容 -->
+						<div class="">
+							<!-- 完结评论 -->
+							<div class="title_head">完结评论</div>
+							<div class="title_content" id="endContent">
+								<div class="content_font">评分：<span id="score"></span></div>
+								<div class="color_yellow">
+									★★★★★<span id="star5" class="content_font star_num"></span>
+								</div>
+								<div class="content_font color_yellow">
+									★★★★<span id="star4" class="content_font star_num"></span>
+								</div>
+								<div class="content_font color_yellow">
+									★★★<span id="star3" class="content_font star_num"></span>
+								</div>
+								<div class="content_font color_yellow">
+									★★<span id="star2" class="content_font star_num"></span>
+								</div>
+								<div class="content_font color_yellow">
+									★<span id="star1" class="content_font star_num"></span>
+								</div>
+							</div>
+						</div>
+						<div>
+							<!-- 长评汇总 -->
+							<div class="title_head title_head_middle">长评汇总</div>
+							<div class="title_content" id="longContent"></div>
+						</div>
+						<div>
+							<!-- 本文相关话题 -->
+							<div class="title_head_last">本文相关话题</div>
+							<div class="title_content" id="tipContent"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- 这个是用来遮罩的 -->
+			<div id="modelDiv"></div>
+			<!-- 这个是用来展示弹框内容的 -->
+			<div id="model">
+				<div
+					style="
+						float: right;
+						height: 20px;
+						width: 20px;
+						border-radius: 50%;
+						border: 2px solid red;
+						text-align: center;
+					"
+					onclick="closeModel()"
+				>
+					X
+				</div>
+				<div id="result">发布成功</div>
+			</div>
+		</div>
+
+		<script>
+			// 页面一进入就打开了弹出框。所以直接遮挡
+			// 此处是用来解决如果你的页面过大会出现滚动条，这样遮罩层只能遮挡你的可见部分滚动内容无法折腾的问题。
+			document.body.style.overflow = 'hidden';
+			/**
+			 * 关闭弹出框的功能
+			 */
+			function closeModel() {
+				document.getElementById('model').style.display = 'none';
+				document.getElementById('modelDiv').style.display = 'none';
+				// 不遮挡后面的内容将body设置为原始样式，也就是实现可滚动
+				document.body.style.overflow = 'auto';
+			}
+			// 打开弹出框
+			function openModel() {
+				document.getElementById('model').style.display = 'block';
+				document.getElementById('modelDiv').style.display = 'block';
+			}
+			function vilidate() {
+				var elem = document.getElementById('message');
+				var result = document.getElementById('result');
+				if (!elem.value) {
+					result.innerHTML = '内容不能为空';
+				} else {
+					result.innerHTML = '发布成功';
+				}
+				console.log('======', elem.value, result);
+				openModel();
+				return false;
+			}
+
+			function getDissList() {
+				var str = '';
+				// 当前评论
+				var arr = [
+					{
+						content: '吐了，这什么垃圾剧情，这男主不就是个凤凰男吗，拉黑了！',
+						subTime: '2021年7月28日',
+						discussor: '到处蹭吃的蛤蟆精',
+						textName: '医手遮天',
+					},
+					{
+						content: '果然姓段的没有一个好东西',
+						subTime: '2021年7月30日',
+						discussor: '油女鬼鲛',
+						textName: '医手遮天',
+					},
+					{
+						content:
+							'看了50章，感觉还行，没有楼上说的不堪，就一典型的屌丝逆袭流爽文，再说了现实里这种事不也不少嘛，什么潜规则，踩人上位，我感觉作者写的挺真实的。',
+						subTime: '2021年8月4日',
+						discussor: '蛆一',
+						textName: '医手遮天',
+					},
+					{
+						content:
+							'打扰了各位，刚才睡觉，楼上的不小心跑出来了，我这就带他回去',
+						subTime: '2021年8月5日',
+						discussor: '人渣管理局',
+						textName: '医手遮天',
+					},
+					{
+						content: '我看这蛆一和作者一样恶心，真tm恶心，呸，恶心！',
+						subTime: '2021年8月5日',
+						discussor: '师爷',
+						textName: '医手遮天',
+					},
+				];
+				/****普通for循环****/
+				let len = arr.length;
+				for (let i = 0; i < len; i++) {
+					str += `<div class="discuss_style">
+                            <div class="list_style">
+                                <div>${arr[i].discussor}&nbsp;评论《${arr[i].textName}》</div>
+                                <div>发布时间：${arr[i].subTime}</div>
+                            </div>
+                            <div class="list_content_style">
+                                ${arr[i].content}
+                            </div>
+                         </div>`;
+				}
+				document.getElementById('discussList').innerHTML = str;
+				// 完结评论
+				document.getElementById('score').innerHTML = '6.8';
+				document.getElementById('star5').innerHTML = '10%';
+				document.getElementById('star4').innerHTML = '24%';
+				document.getElementById('star3').innerHTML = '55%';
+				document.getElementById('star2').innerHTML = '19%';
+				document.getElementById('star1').innerHTML = '10%';
+
+				// 长评汇总
+				var longStr = '';
+				var longArr = [
+					{
+						content: '众筹给作者家送刀片，现在一人',
+					},
+					{
+						content: '如果彭羽能重来，段天南是不是就废了',
+					},
+					{
+						content: '白苏虞这种白莲花为什么死的这么简单',
+					},
+					{
+						content: '马佩兰则名字也太土了吧',
+					},
+				];
+				let longLen = longArr.length;
+				for (let i = 0; i < longLen; i++) {
+					longStr += `<div class="long_content_style content_font">${longArr[i].content}</div>`;
+				}
+				document.getElementById('longContent').innerHTML = longStr;
+				// 本文相关话题
+				var tipStr = '';
+				var tipArr = [
+					{
+						content: '感觉作者换人了，你们觉得呢？',
+					},
+					{
+						content: '本文中途换男主，大家忍过前50章就好',
+					},
+					{
+						content: '有没人察觉到重要角色的名字都是药材名？',
+					},
+					{
+						content: '段天南下线了，普天同庆',
+					},
+					{
+						content: '组团给作者道歉，目前一人',
+					},
+				];
+				let tipLen = tipArr.length;
+				for (let i = 0; i < tipLen; i++) {
+					tipStr += `<div class="tip_content_style content_font">★ ${tipArr[i].content}</div>`;
+				}
+				document.getElementById('tipContent').innerHTML = tipStr;
+			}
+			getDissList();
+		</script>
+	</body>
+</html>
