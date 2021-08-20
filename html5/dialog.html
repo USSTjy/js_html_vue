@@ -253,12 +253,14 @@
 						subTime: '2021年7月28日',
 						discussor: '到处蹭吃的蛤蟆精',
 						textName: '医手遮天',
+						capture: 1,
 					},
 					{
 						content: '果然姓段的没有一个好东西',
 						subTime: '2021年7月30日',
 						discussor: '油女鬼鲛',
 						textName: '医手遮天',
+						capture: 1,
 					},
 					{
 						content:
@@ -266,6 +268,7 @@
 						subTime: '2021年8月4日',
 						discussor: '蛆一',
 						textName: '医手遮天',
+						capture: 1,
 					},
 					{
 						content:
@@ -273,12 +276,52 @@
 						subTime: '2021年8月5日',
 						discussor: '人渣管理局',
 						textName: '医手遮天',
+						capture: 1,
 					},
 					{
 						content: '我看这蛆一和作者一样恶心，真tm恶心，呸，恶心！',
 						subTime: '2021年8月5日',
 						discussor: '师爷',
 						textName: '医手遮天',
+						capture: 1,
+					},
+
+					{
+						content: '吐了，这什么垃圾剧情，这男主不就是个凤凰男吗，拉黑了！',
+						subTime: '2021年7月28日',
+						discussor: '到处蹭吃的蛤蟆精',
+						textName: '医手遮天',
+						capture: 17,
+					},
+					{
+						content: '果然姓段的没有一个好东西',
+						subTime: '2021年7月30日',
+						discussor: '油女鬼鲛',
+						textName: '医手遮天',
+						capture: 17,
+					},
+					{
+						content:
+							'看了50章，感觉还行，没有楼上说的不堪，就一典型的屌丝逆袭流爽文，再说了现实里这种事不也不少嘛，什么潜规则，踩人上位，我感觉作者写的挺真实的。',
+						subTime: '2021年8月4日',
+						discussor: '蛆一',
+						textName: '医手遮天',
+						capture: 17,
+					},
+					{
+						content:
+							'打扰了各位，刚才睡觉，楼上的不小心跑出来了，我这就带他回去',
+						subTime: '2021年8月5日',
+						discussor: '人渣管理局',
+						textName: '医手遮天',
+						capture: 17,
+					},
+					{
+						content: '我看这蛆一和作者一样恶心，真tm恶心，呸，恶心！',
+						subTime: '2021年8月5日',
+						discussor: '师爷',
+						textName: '医手遮天',
+						capture: 17,
 					},
 				];
 				/****普通for循环****/
@@ -288,6 +331,7 @@
                             <div class="list_style">
                                 <div>${arr[i].discussor}&nbsp;评论《${arr[i].textName}》</div>
                                 <div>发布时间：${arr[i].subTime}</div>
+                                <div>所选章节：${arr[i].capture}</div>
                             </div>
                             <div class="list_content_style">
                                 ${arr[i].content}
